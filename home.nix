@@ -10,7 +10,14 @@
   home.packages = with pkgs; [
     vim
     htop
-    # fortune
+    keepassxc
+    kmymoney
+    darktable
+    free42
+    ffmpeg
+    libreoffice
+    vlc
+    chromium
   ];
 
   # This value determines the Home Manager release that your
