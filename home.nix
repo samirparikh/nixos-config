@@ -1,6 +1,4 @@
-{ config, pkgs, ... }:
-
-{
+{ config, pkgs, ... }: {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "samir";
@@ -42,30 +40,51 @@
     };
   };
 
-  programs.vscode = {
-      enable = false;  # will enable later
- 
-      profiles.default.userSettings = {
-          # This property will be used to generate settings.json:
-          # https://code.visualstudio.com/docs/getstarted/settings#_settingsjson
-          # "editor.formatOnSave" = true;
+  programs.firefox = {
+    enable = true;
+    profiles.samir = {
+      extensions = {
+        packages = with pkgs.nur.repos.rycee.firefox-addons; [
+          # Add your extensions here. Some popular ones:
+          ublock-origin
+          tree-style-tab
+          web-archives
+          vimium
+          # You can find more at: https://nur.nix-community.org/repos/rycee/
+        ];
       };
-      # keybindings = [
-          # See https://code.visualstudio.com/docs/getstarted/keybindings#_advanced-customization
-          # {
-              # key = "shift+cmd+j";
-              # command = "workbench.action.focusActiveEditorGroup";
-              # when = "terminalFocus";
-          # }
-      # ];
+      
+      settings = {
+        # Optional: Firefox settings
+        "browser.startup.homepage" = "https://nixos.org";
+        "browser.search.defaultenginename" = "DuckDuckGo";
+      };
+    };
   };
 
-#  services.gpg-agent = {
-#    enable = true;
-#    defaultCacheTtl = 1800;
-#    enableSshSupport = true;
-#  };
+  programs.vscode = {
+    enable = false; # will enable later
+    profiles.default.userSettings = {
+      # This property will be used to generate settings.json:
+      # https://code.visualstudio.com/docs/getstarted/settings#_settingsjson
+      # "editor.formatOnSave" = true;
+    };
+    # keybindings = [
+    #   See https://code.visualstudio.com/docs/getstarted/keybindings#_advanced-customization
+    #   {
+    #     key = "shift+cmd+j";
+    #     command = "workbench.action.focusActiveEditorGroup";
+    #     when = "terminalFocus";
+    #   }
+    # ];
+  };
 
-#  see https://nixos-and-flakes.thiscute.world/nixos-with-flakes/start-using-home-manager#getting-started-with-home-manager
-#  for more examples on how to configure home.nix
+  # services.gpg-agent = {
+  #   enable = true;
+  #   defaultCacheTtl = 1800;
+  #   enableSshSupport = true;
+  # };
+
+  # see https://nixos-and-flakes.thiscute.world/nixos-with-flakes/start-using-home-manager#getting-started-with-home-manager
+  # for more examples on how to configure home.nix
 }

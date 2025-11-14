@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+
     # home-manager, used for managing user configuration
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
@@ -12,9 +13,12 @@
       # to avoid problems caused by different versions of nixpkgs.
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Add NUR for Firefox extensions
+    nur.url = "github:nix-community/NUR";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, nur, ... }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         modules = [
@@ -26,10 +30,13 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-
             home-manager.users.samir = import ./home.nix;
+            
+            # Automatically backup existing files
+            home-manager.backupFileExtension = "backup";
 
-            # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
+            # Make NUR available in home-manager
+            nixpkgs.overlays = [ nur.overlays.default ];
           }
         ];
       };
