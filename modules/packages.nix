@@ -12,6 +12,8 @@
     # vim
     # wget
     # git
+    libimobiledevice
+    ifuse
   ];
 
   # Default editor
