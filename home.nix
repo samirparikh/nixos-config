@@ -16,6 +16,7 @@
     libreoffice
     vlc
     chromium
+    microsoft-edge
   ];
 
   # This value determines the Home Manager release that your
@@ -37,6 +38,12 @@
     userEmail = "siparikh@gmail.com";
     extraConfig = {
       init.defaultBranch = "main";
+
+      diff.tool = "vimdiff";
+      difftool.prompt = false;
+  
+      # Make "git diff" run the difftool
+      alias.diff = "difftool";
     };
   };
 
