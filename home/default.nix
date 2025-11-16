@@ -15,6 +15,7 @@
   home.packages = with pkgs; [
     vim
     keepassxc
+    kmymoney
     darktable
     free42
     ffmpeg
