@@ -22,7 +22,7 @@
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         modules = [
-          ./configuration.nix
+          ./hosts/nixos
 
           # make home-manager as a module of nixos
           # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
@@ -30,7 +30,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.samir = import ./home.nix;
+            home-manager.users.samir = import ./home;
             
             # Automatically backup existing files
             home-manager.backupFileExtension = "backup";
