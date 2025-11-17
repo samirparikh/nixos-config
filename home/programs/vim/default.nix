@@ -6,6 +6,7 @@
     plugins = with pkgs.vimPlugins;
       [
         vim-airline
+        nerdtree
       ];
     settings = { ignorecase = true; };
     # extraConfig = ''
