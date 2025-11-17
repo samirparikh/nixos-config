@@ -7,6 +7,7 @@
     ./programs/vscode.nix
     ./programs/firefox.nix
     ./programs/vim
+    ./programs/tmux
   ];
 
   home.username = "samir";
