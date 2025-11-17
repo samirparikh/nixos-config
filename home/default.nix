@@ -6,6 +6,7 @@
     ./programs/git.nix
     ./programs/vscode.nix
     ./programs/firefox.nix
+    ./programs/vim
   ];
 
   home.username = "samir";
@@ -13,7 +14,7 @@
 
   # Packages to install for this user
   home.packages = with pkgs; [
-    vim
+    # vim
     keepassxc
     kmymoney
     darktable
