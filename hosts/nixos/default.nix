@@ -45,6 +45,36 @@
     ifuse
   ];
 
+  # Install Nerd Fonts
+  # find more here
+  # https://search.nixos.org/packages?channel=25.05&sort=alpha_asc&query=nerd-fonts.
+  fonts.packages = with pkgs.nerd-fonts; [
+    adwaita-mono
+    agave
+    blex-mono
+    caskaydia-cove
+    caskaydia-mono
+    droid-sans-mono
+    fira-code
+    fira-mono
+    geist-mono
+    go-mono
+    inconsolata
+    inconsolata-go
+    inconsolata-lgc
+    intone-mono
+    lilex
+    meslo-lg
+    monaspace
+    mononoki
+    noto
+    overpass
+    recursive-mono
+    roboto-mono
+    symbols-only
+    tinos
+  ];
+
   # Default editor
   # environment.variables.EDITOR = "vim";
 
