@@ -17,8 +17,28 @@
       
       settings = {
         # Optional: Firefox settings
+        # see this page for more options on setting and policies:
+        # https://github.com/Kreyren/nixos-config/blob/central/src/nixos/users/kreyren/home/modules/web-browsers/firefox/firefox.nix
+
+        # Disable browser password manager
+        "browser.contextual-password-manager.enabled" = false;
+
+        # Disable sponsored suggestions on new tab pages
+        "browser.newtabpage.activity-stream.showSponsored" = false;
+        "browser.newtabpage.activity-stream.showSponsoredCheckboxes" = false;
+        "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+        "browser.newtabpage.activity-stream.system.showSponsored" = false;
+        "browser.newtabpage.activity-stream.system.showSponsoredCheckboxes" = false;
+        "browser.newtabpage.sponsor-protection.enabled" = false;
+
+        # Set default search engine
+        "browser.search.defaultenginename" = "Google";
+
+        # Define browser startup behavior
+        "browser.sessionstore.restore_on_demand" = true;
+        "browser.sessionstore.resume_from_crash" = true;
+        "browser.startup.page" = 3;
         "browser.startup.homepage" = "https://nixos.org";
-        "browser.search.defaultenginename" = "DuckDuckGo";
 
         # Additional settings to ensure extensions work
         # "extensions.autoDisableScopes" = 0;
