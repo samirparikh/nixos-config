@@ -25,6 +25,7 @@
     vlc
     chromium
     microsoft-edge
+    tree
   ];
 
   # Let Home Manager install and manage itself
