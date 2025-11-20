@@ -8,4 +8,7 @@
 
   # enable ifuse to connect to iPhone
   services.usbmuxd.enable = true;
+
+  # enable tailscale
+  services.tailscale.enable = true;
 }
