@@ -1,2 +1,3 @@
 *.lock
 result
+hosts/nixos/filesystems-home.nix.bak
