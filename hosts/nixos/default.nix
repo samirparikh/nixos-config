@@ -9,6 +9,7 @@
     ../../modules/system/security.nix
     ../../modules/system/users.nix
     ../../modules/system/locale.nix
+    ../../modules/system/btrfs-subvolumes.nix
     ../../modules/services/services.nix
     ../../modules/hardware/audio.nix
     ../../modules/hardware/graphics.nix
