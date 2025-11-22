@@ -37,4 +37,12 @@
     fsType = "btrfs";
     options = [ "subvol=@home-sites" ];
   };
+
+
+  fileSystems."/snapshots" = {
+    device = "/dev/mapper/luks-a37448bd-4303-407e-b1bd-b78d8ba9c4fa";
+    fsType = "btrfs";
+    options = [ "subvol=@snapshots" ];
+  };
+
 }
