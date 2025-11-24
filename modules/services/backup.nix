@@ -20,7 +20,6 @@
       Music = "/home/samir/Music";
       Pictures = "/home/samir/Pictures";
       Videos = "/home/samir/Videos";
-      sites = "/home/samir/sites";
     };
     
     # Retention
