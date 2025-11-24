@@ -7,10 +7,6 @@
     # home-manager, used for managing user configuration
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
-      # The `follows` keyword in inputs is used for inheritance.
-      # Here, `inputs.nixpkgs` of home-manager is kept consistent with
-      # the `inputs.nixpkgs` of the current flake,
-      # to avoid problems caused by different versions of nixpkgs.
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -18,10 +14,7 @@
     nur.url = "github:nix-community/NUR";
 
     btrfs-backup = {
-      # Option 1: Local path during development
       url = "/home/samir/flakes/btrfs-backup-flake";
-      # Option 2: From GitHub (once pushed)
-      # url = "github:yourusername/btrfs-backup-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -29,17 +22,39 @@
   outputs = inputs@{ nixpkgs, home-manager, nur, btrfs-backup, ... }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
+
         modules = [
           ./hosts/nixos
 
-          # make home-manager as a module of nixos
-          # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
+          # ---- Locale + command-not-found fixes ----
+          {
+            i18n = {
+              defaultLocale = "en_US.UTF-8";
+
+              extraLocaleSettings = {
+                LC_TIME = "en_GB.UTF-8";
+              };
+
+              supportedLocales = [
+                "en_US.UTF-8/UTF-8"
+                "en_GB.UTF-8/UTF-8"
+              ];
+            };
+
+            programs.command-not-found = {
+              enable = true;
+              autoUpdate = true;
+            };
+          }
+          # -------------------------------------------
+
+          # home-manager integration
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.samir = import ./home;
-            
+
             # Automatically backup existing files
             home-manager.backupFileExtension = "backup";
 
@@ -47,8 +62,8 @@
             nixpkgs.overlays = [ nur.overlays.default ];
           }
 
+          # Your backup script flake module
           btrfs-backup.nixosModules.default
-
         ];
       };
     };
