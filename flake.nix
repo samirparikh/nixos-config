@@ -42,7 +42,7 @@
               ];
             };
           
-            programs.command-not-found.enable = true;
+            programs.nix-command-not-found.enable = true;
           })
           # -------------------------------------------
 
