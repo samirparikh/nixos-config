@@ -27,25 +27,23 @@
           ./hosts/nixos
 
           # ---- Locale + command-not-found fixes ----
+          ({ config, lib, ... }:
           {
             i18n = {
               defaultLocale = "en_US.UTF-8";
-
+          
               extraLocaleSettings = {
-                LC_TIME = "en_GB.UTF-8";
+                LC_TIME = lib.mkForce "en_GB.UTF-8";
               };
-
+          
               supportedLocales = [
                 "en_US.UTF-8/UTF-8"
                 "en_GB.UTF-8/UTF-8"
               ];
             };
-
-            programs.command-not-found = {
-              enable = true;
-              autoUpdate = true;
-            };
-          }
+          
+            programs.command-not-found.enable = true;
+          })
           # -------------------------------------------
 
           # home-manager integration
