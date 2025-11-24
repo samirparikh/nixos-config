@@ -11,6 +11,7 @@
     ../../modules/system/locale.nix
     ../../modules/system/btrfs-subvolumes.nix
     ../../modules/services/services.nix
+    ../../modules/services/backup.nix
     ../../modules/hardware/audio.nix
     ../../modules/hardware/graphics.nix
     ../../modules/hardware/bluetooth.nix

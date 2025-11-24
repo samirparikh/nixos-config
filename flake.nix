@@ -16,9 +16,17 @@
 
     # Add NUR for Firefox extensions
     nur.url = "github:nix-community/NUR";
+
+    btrfs-backup = {
+      # Option 1: Local path during development
+      url = "/home/samir/flakes/btrfs-backup-flake";
+      # Option 2: From GitHub (once pushed)
+      # url = "github:yourusername/btrfs-backup-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, nur, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, nur, btrfs-backup, ... }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         modules = [
@@ -38,6 +46,9 @@
             # Make NUR available in home-manager
             nixpkgs.overlays = [ nur.overlays.default ];
           }
+
+          btrfs-backup.nixosModules.default
+
         ];
       };
     };
