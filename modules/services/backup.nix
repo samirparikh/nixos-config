@@ -30,7 +30,7 @@
     logFile = "/var/log/btrfs-backup.log";
 
     enableTimer = true;
-    timerSchedule = "03:00";
+    timerSchedule = "10:00";
   };
 
   # Wake system from sleep for backup
@@ -42,12 +42,14 @@
 
   # Handle resume timing and add retry logic
   systemd.services.btrfs-backup = {
+    # Rate limiting goes in the unit config
+    startLimitIntervalSec = 1800;  # 30 minutes
+    startLimitBurst = 3;
+    
     serviceConfig = {
       ExecStartPre = "${pkgs.coreutils}/bin/sleep 30";
       Restart = "on-failure";
       RestartSec = "2min";
-      StartLimitIntervalSec = "30min";
-      StartLimitBurst = 3;
     };
   };
 }
