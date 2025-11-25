@@ -30,6 +30,16 @@
     logFile = "/var/log/btrfs-backup.log";
 
     enableTimer = true;
-    timerSchedule = "03:00";
+    timerSchedule = "10:00";
+  };
+
+  # Retry logic for transient network failures
+  systemd.services.btrfs-backup = {
+    serviceConfig = {
+      Restart = "on-failure";
+      RestartSec = "2min";
+      StartLimitIntervalSec = "30min";
+      StartLimitBurst = 3;
+    };
   };
 }
