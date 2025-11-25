@@ -2,12 +2,12 @@
 
 {
   imports = [
-    ./programs/shell.nix
-    ./programs/git.nix
     ./programs/vscode.nix
     ./programs/firefox.nix
-    ./programs/vim
-    ./programs/tmux
+    ./programs/terminal/shell.nix
+    ./programs/terminal/git.nix
+    ./programs/terminal/vim
+    ./programs/terminal/tmux
   ];
 
   home.username = "samir";
@@ -15,7 +15,6 @@
 
   # Packages to install for this user
   home.packages = with pkgs; [
-    # vim
     keepassxc
     kmymoney
     darktable
