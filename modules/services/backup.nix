@@ -30,12 +30,20 @@
     logFile = "/var/log/btrfs-backup.log";
 
     enableTimer = true;
-    timerSchedule = "14:10";
+    timerSchedule = "03:00";
   };
 
-  # Retry logic for transient network failures
+  # Wake system from sleep for backup
+  systemd.timers.btrfs-backup = {
+    timerConfig = {
+      WakeSystem = true;
+    };
+  };
+
+  # Handle resume timing and add retry logic
   systemd.services.btrfs-backup = {
     serviceConfig = {
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 30";
       Restart = "on-failure";
       RestartSec = "2min";
       StartLimitIntervalSec = "30min";
