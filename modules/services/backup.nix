@@ -30,6 +30,6 @@
     logFile = "/var/log/btrfs-backup.log";
 
     enableTimer = true;
-    timerSchedule = "15:30";
+    timerSchedule = "03:00";
   };
 }
