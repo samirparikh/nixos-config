@@ -30,7 +30,7 @@
     logFile = "/var/log/btrfs-backup.log";
 
     enableTimer = true;
-    timerSchedule = "10:00";
+    timerSchedule = "14:10";
   };
 
   # Retry logic for transient network failures
