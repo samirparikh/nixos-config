@@ -17,6 +17,8 @@
       url = "github:samirparikh/btrfs-backup-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    speedup.url = "github:samirparikh/speedup";
   };
 
   outputs = inputs@{ nixpkgs, home-manager, nur, btrfs-backup, ... }: {

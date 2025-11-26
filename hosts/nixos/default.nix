@@ -46,6 +46,7 @@
     # htop
     libimobiledevice
     ifuse
+    inputs.speedup.packages.${pkgs.system}.speedup
   ];
 
   # Install Nerd Fonts
