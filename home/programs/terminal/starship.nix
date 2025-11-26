@@ -4,6 +4,8 @@
   ...
 }:
 {
+  # cloned from:
+  # https://github.com/wimpysworld/nix-config/blob/main/home-manager/_mixins/terminal/starship.nix
   catppuccin.starship.enable = config.programs.starship.enable;
 
   programs = {
@@ -20,16 +22,16 @@
           disabled = true;
         };
         format = lib.concatStrings [
-          "[](surface1)"
-          "$os"
-          "[](bg:surface2 fg:surface1)"
+          "[](surface2)"
+#          "$os"
+#          "[](bg:surface2 fg:surface1)"
           "$username"
           "$sudo"
-          "[](bg:overlay0 fg:surface2)"
+          "[](bg:overlay0 fg:surface2)"
           "$hostname"
-          "[](bg:mauve fg:overlay0)"
+          "[](bg:mauve fg:overlay0)"
           "$directory"
-          "[](fg:mauve bg:peach)"
+          "[](fg:mauve bg:peach)"
           "$c"
           "$dart"
           "$dotnet"
@@ -56,20 +58,20 @@
           "$zig"
           "$package"
           "$git_branch"
-          "[](fg:peach bg:yellow)"
+          "[](fg:peach bg:yellow)"
           "$git_status"
-          "[](fg:yellow bg:teal)"
+          "[](fg:yellow bg:teal)"
           "$container"
           "$direnv"
           "$nix_shell"
-          "$cmd_duration"
+#          "$cmd_duration"
           "$jobs"
           "$shlvl"
-          "$status"
+#          "$status"
           "$character"
         ];
         os = {
-          disabled = false;
+          disabled = true;
           format = "$symbol";
           style = "";
         };
@@ -115,8 +117,8 @@
         };
         username = {
           aliases = {
-            "${config.home.username}" = "󰝴";
-            "root" = "󰱯";
+            "${config.home.username}" = "󰝴 ";
+            "root" = "󰱯 ";
           };
           format = "[ $user]($style)";
           show_always = true;
@@ -127,19 +129,19 @@
           disabled = false;
           format = "[ $symbol]($style)";
           style = "fg:rosewater bg:surface2";
-          symbol = "󰌋";
+          symbol = "󰌋 ";
         };
         hostname = {
           disabled = false;
           style = "bg:overlay0 fg:red";
           ssh_only = false;
-          ssh_symbol = " 󰖈";
+          ssh_symbol = "󰖈 ";
           format = "[ $hostname]($style)[$ssh_symbol](bg:overlay0 fg:maroon)";
         };
         directory = {
           format = "[ $path]($style)[$read_only]($read_only_style)";
-          home_symbol = "";
-          read_only = " 󰈈";
+          home_symbol = " ";
+          read_only = "󰈈 ";
           read_only_style = "bold fg:crust bg:mauve";
           style = "fg:base bg:mauve";
           truncation_length = 3;
@@ -150,15 +152,15 @@
           "Apps" = "󰵆";
           "Audio" = "";
           "Crypt" = "󰌾";
-          "Desktop" = "";
+          "Desktop" = " ";
           "Development" = "";
-          "Documents" = "󰈙";
-          "Downloads" = "󰉍";
+          "Documents" = "󰈙 ";
+          "Downloads" = "󰉍 ";
           "Dropbox" = "";
           "Games" = "󰊴";
           "Keybase" = "󰯄";
-          "Music" = "󰎄";
-          "Pictures" = "";
+          "Music" = "󰎄 ";
+          "Pictures" = " ";
           "Public" = "";
           "Quickemu" = "";
           "Studio" = "󰡇";
@@ -166,7 +168,7 @@
           "Videos" = "";
           "Volatile" = "󱪃";
           "Websites" = "󰖟";
-          "nix-config" = "󱄅";
+          "nixos-config" = "󱄅 ";
           "Zero" = "󰎡";
         };
         # Languages
@@ -299,6 +301,8 @@
           format = "[ $symbol $branch]($style)";
           style = "fg:base bg:peach";
           symbol = "";
+          # Only when inside git repository
+          # when = "git rev-parse --is-inside-work-tree >/dev/null 2>&1";
         };
         git_status = {
           format = "[ $all_status$ahead_behind]($style)";
@@ -314,8 +318,10 @@
           ahead = "󰜹";
           behind = "󰜰";
           diverged = "";
-          up_to_date = "󰤓";
+          up_to_date = "󰤓 ";
           style = "fg:base bg:yellow";
+          # Only when inside git repository
+          # when = "git rev-parse --is-inside-work-tree >/dev/null 2>&1";
         };
         # "Shells"
         container = {
@@ -340,6 +346,7 @@
           symbol = "󱄅";
         };
         cmd_duration = {
+          disabled = true;
           format = "[  $duration]($style)";
           min_time = 2500;
           min_time_to_notify = 60000;
@@ -360,23 +367,23 @@
           threshold = 3;
         };
         status = {
-          disabled = false;
+          disabled = true;
           format = "$symbol";
           map_symbol = true;
           pipestatus = false;
           style = "";
-          symbol = "[](fg:teal bg:pink)[  $status](fg:red bg:pink)";
-          success_symbol = "[](fg:teal bg:blue)";
-          not_executable_symbol = "[](fg:teal bg:pink)[  $common_meaning](fg:red bg:pink)";
-          not_found_symbol = "[](fg:teal bg:pink)[ 󰩌 $common_meaning](fg:red bg:pink)";
-          sigint_symbol = "[](fg:teal bg:pink)[  $signal_name](fg:red bg:pink)";
-          signal_symbol = "[](fg:teal bg:pink)[ ⚡ $signal_name](fg:red bg:pink)";
+          symbol = "[](fg:teal bg:pink)[  $status](fg:red bg:pink)";
+          success_symbol = "[](fg:teal bg:blue)";
+          not_executable_symbol = "[](fg:teal bg:pink)[  $common_meaning](fg:red bg:pink)";
+          not_found_symbol = "[](fg:teal bg:pink)[ 󰩌 $common_meaning](fg:red bg:pink)";
+          sigint_symbol = "[](fg:teal bg:pink)[  $signal_name](fg:red bg:pink)";
+          signal_symbol = "[](fg:teal bg:pink)[ ⚡ $signal_name](fg:red bg:pink)";
         };
         character = {
           disabled = false;
           format = "$symbol";
-          error_symbol = "(fg:red bg:pink)[](fg:pink) ";
-          success_symbol = "[](fg:blue) ";
+          error_symbol = "(fg:red bg:red)[](fg:red) ";
+          success_symbol = "[](fg:green) ";
         };
       };
     };
