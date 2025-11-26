@@ -30,14 +30,12 @@
   outputs = inputs@{
     nixpkgs,
     home-manager,
-    nur,
-    btrfs-backup,
-    catppuccin,
     ...
   }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
 
+        # Pass all inputs to NixOS modules
         specialArgs = { inherit inputs; };
 
         modules = [
@@ -54,22 +52,15 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.samir = {
-              imports = [
-                ./home
-                catppuccin.homeModules.catppuccin
-              ];
-            };
+
+            # Pass inputs to home-manager modules
+            home-manager.extraSpecialArgs = { inherit inputs; };
+
+            home-manager.users.samir = ./home;
 
             # Automatically backup existing files
             home-manager.backupFileExtension = "backup";
-
-            # Make NUR available in home-manager
-            nixpkgs.overlays = [ nur.overlays.default ];
           }
-
-          # Your backup script flake module
-          btrfs-backup.nixosModules.default
         ];
       };
     };

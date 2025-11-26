@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports = [
@@ -9,6 +9,9 @@
     ./programs/terminal/vim
     ./programs/terminal/tmux
     ./programs/terminal/starship.nix
+
+    # Host-specific: catppuccin theme module
+    inputs.catppuccin.homeModules.catppuccin
   ];
 
   # Enable the Catppuccin theme

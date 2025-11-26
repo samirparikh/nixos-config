@@ -16,10 +16,16 @@
     ../../modules/hardware/graphics.nix
     ../../modules/hardware/bluetooth.nix
     ../../modules/desktop/kde.nix
+
+    # Host-specific: btrfs-backup module
+    inputs.btrfs-backup.nixosModules.default
   ];
 
   # Hostname
   networking.hostName = "nixos";
+
+  # Host-specific: NUR overlay for Firefox extensions
+  nixpkgs.overlays = [ inputs.nur.overlays.default ];
 
   # Increase download buffer size
   nix.settings.download-buffer-size = 500000000; # 500 MB
@@ -46,6 +52,7 @@
     # htop
     libimobiledevice
     ifuse
+    # Host-specific: speedup package
     inputs.speedup.packages.${pkgs.system}.speedup
   ];
 
