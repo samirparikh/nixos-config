@@ -14,7 +14,7 @@
     nur.url = "github:nix-community/NUR";
 
     btrfs-backup = {
-      url = "/home/samir/flakes/btrfs-backup-flake";
+      url = "github:samirparikh/btrfs-backup-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
