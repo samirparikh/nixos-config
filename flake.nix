@@ -25,6 +25,8 @@
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
 
+        specialArgs = { inherit inputs; };
+
         modules = [
           ./hosts/nixos
 
@@ -44,7 +46,8 @@
               ];
             };
           
-#            programs.command-not-found.enable = true;
+            programs.command-not-found.enable = false;
+            programs.nix-index.enable = true;
           })
           # -------------------------------------------
 
