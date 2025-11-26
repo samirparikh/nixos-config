@@ -19,9 +19,22 @@
     };
 
     speedup.url = "github:samirparikh/speedup";
+
+    catppuccin = {
+      # url = "github:catppuccin/nix";
+      url = "github:catppuccin/nix?rev=751b99dca72c7f9df5475c67dcf1059893564e32";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, nur, btrfs-backup, ... }: {
+  outputs = inputs@{
+    nixpkgs,
+    home-manager,
+    nur,
+    btrfs-backup,
+    catppuccin,
+    ...
+  }: {
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
 
@@ -41,7 +54,12 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.samir = import ./home;
+            home-manager.users.samir = {
+              imports = [
+                ./home
+                catppuccin.homeModules.catppuccin
+              ];
+            };
 
             # Automatically backup existing files
             home-manager.backupFileExtension = "backup";
