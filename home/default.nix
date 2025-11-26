@@ -8,7 +8,16 @@
     ./programs/terminal/git.nix
     ./programs/terminal/vim
     ./programs/terminal/tmux
+    ./programs/terminal/starship.nix
   ];
+
+  # Enable the Catppuccin theme
+#  catppuccin = {
+#    accent = catppuccinPalette.accent;
+#    flavor = catppuccinPalette.flavor;
+#    fish.enable = config.programs.fish.enable;
+#    zsh-syntax-highlighting.enable = config.programs.zsh.enable;
+#  };
 
   home.username = "samir";
   home.homeDirectory = "/home/samir";
