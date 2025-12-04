@@ -4,6 +4,9 @@
   imports = [
     ./programs/vscode.nix
     ./programs/firefox.nix
+    # be sure to also update hosts/nixos/default.nix to
+    # include modules/system/virtualization.nix
+    ./programs/virtmanager.nix
     ./programs/terminal/shell.nix
     ./programs/terminal/git.nix
     ./programs/terminal/vim
