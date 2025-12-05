@@ -6,7 +6,7 @@
     ./programs/firefox.nix
     # be sure to also update hosts/nixos/default.nix to
     # include modules/system/virtualization.nix
-    ./programs/virtmanager.nix
+    # ./programs/virtmanager.nix
     # ./programs/terminal/bash.nix
     ./programs/terminal/fish.nix
     ./programs/terminal/git.nix
@@ -17,14 +17,6 @@
     # Host-specific: catppuccin theme module
     inputs.catppuccin.homeModules.catppuccin
   ];
-
-  # Enable the Catppuccin theme
-#  catppuccin = {
-#    accent = catppuccinPalette.accent;
-#    flavor = catppuccinPalette.flavor;
-#    fish.enable = config.programs.fish.enable;
-#    zsh-syntax-highlighting.enable = config.programs.zsh.enable;
-#  };
 
   home.username = "samir";
   home.homeDirectory = "/home/samir";

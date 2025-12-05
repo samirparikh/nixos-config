@@ -12,7 +12,7 @@
     ../../modules/system/btrfs-subvolumes.nix
     # be sure to also update home/default to include
     # home/programs/virtmanager.nix
-    ../../modules/system/virtualization.nix
+    # ../../modules/system/virtualization.nix
     ../../modules/services/services.nix
     ../../modules/services/backup.nix
     ../../modules/hardware/audio.nix
