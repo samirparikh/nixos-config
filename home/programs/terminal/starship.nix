@@ -315,9 +315,9 @@
           deleted = " ";
           typechanged = " ";
           # $ahead_behind is just one of these
-          ahead = "󰜹";
-          behind = "󰜰";
-          diverged = "";
+          ahead = "󰜹 ";
+          behind = "󰜰 ";
+          diverged = " ";
           up_to_date = "󰤓 ";
           style = "fg:base bg:yellow";
           # Only when inside git repository

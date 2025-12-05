@@ -7,7 +7,8 @@
     # be sure to also update hosts/nixos/default.nix to
     # include modules/system/virtualization.nix
     ./programs/virtmanager.nix
-    ./programs/terminal/shell.nix
+    # ./programs/terminal/bash.nix
+    ./programs/terminal/fish.nix
     ./programs/terminal/git.nix
     ./programs/terminal/vim
     ./programs/terminal/tmux
