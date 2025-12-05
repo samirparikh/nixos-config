@@ -165,7 +165,7 @@
           "Quickemu" = "";
           "Studio" = "󰡇";
           "Vaults" = "󰌿";
-          "Videos" = "";
+          "Videos" = " ";
           "Volatile" = "󱪃";
           "Websites" = "󰖟";
           "nixos-config" = "󱄅 ";
