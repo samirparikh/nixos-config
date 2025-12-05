@@ -23,7 +23,7 @@
    
   users.users.samir = {
     extraGroups = [
-      "libvirtd"
+#      "libvirtd"
       "podman"
     ];
   };
