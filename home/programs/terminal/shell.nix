@@ -6,15 +6,16 @@
     shellAliases = {
       ll = "ls -l";
       la = "ls -a";
-      home = "cd ~/nixos-config/ || exit";
+      home = "cd ~ || exit";
+      nixos = "cd /home/samir/nixos-config/ || exit";
       butane = ''
-        podman run --rm --interactive --security-opt label=disable --volume "''${PWD}:/pwd" --workdir /pwd quay.io/coreos/butane:release
+        podman run --rm --interactive --security-opt label=disable --volume "''$PWD:/pwd" --workdir /pwd quay.io/coreos/butane:release
       '';
       coreos-installer = ''
-        podman run --pull=always --rm --interactive --security-opt label=disable --volume "''${PWD}:/pwd" --workdir /pwd quay.io/coreos/coreos-installer:release
+        podman run --pull=always --rm --interactive --security-opt label=disable --volume "''$PWD:/pwd" --workdir /pwd quay.io/coreos/coreos-installer:release
       '';
       ignition-validate = ''
-        podman run --rm --interactive --security-opt label=disable --volume "''${PWD}:/pwd" --workdir /pwd quay.io/coreos/ignition-validate:release
+        podman run --rm --interactive --security-opt label=disable --volume "''$PWD:/pwd" --workdir /pwd quay.io/coreos/ignition-validate:release
       '';
     };
   };
