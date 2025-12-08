@@ -8,9 +8,10 @@
         packages = with pkgs.nur.repos.rycee.firefox-addons; [
           # Add your extensions here. Some popular ones:
           ublock-origin
-          tree-style-tab
+          # tree-style-tab
           web-archives
           vimium
+          sponsorblock
           # You can find more at: https://nur.nix-community.org/repos/rycee/
         ];
       };
@@ -43,6 +44,9 @@
         # Additional settings to ensure extensions work
         # "extensions.autoDisableScopes" = 0;
         # "extensions.enabledScopes" = 15;
+
+        # Browser layout
+        "sidebar.verticalTabs" = true;
         
         # Required to enable userChrome.css
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
