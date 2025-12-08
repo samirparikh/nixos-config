@@ -33,6 +33,7 @@
     chromium
     microsoft-edge
     tree
+    freetube
   ];
 
   # Let Home Manager install and manage itself
