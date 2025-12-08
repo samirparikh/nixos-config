@@ -53,12 +53,12 @@
       };
       
       # Add userChrome.css
-      userChrome = ''
-        /* hides the native tabs */
-        #tabbrowser-tabs {
-          visibility: collapse !important;
-        }
-      '';
+#      userChrome = ''
+#        /* hides the native tabs */
+#        #tabbrowser-tabs {
+#          visibility: collapse !important;
+#        }
+#      '';
     };
   };
 }
