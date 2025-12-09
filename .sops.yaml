@@ -1,0 +1,8 @@
+keys:
+  - &nixos age1vg35exts78hl2j753r8dr48y36pk729ds37yj7mt6hxg3dvesctsacux0p
+
+creation_rules:
+  - path_regex: secrets/.*\.yaml$
+    key_groups:
+      - age:
+          - *nixos

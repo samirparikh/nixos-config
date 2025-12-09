@@ -23,6 +23,9 @@
 
     # Host-specific: btrfs-backup module
     inputs.btrfs-backup.nixosModules.default
+
+    # sops-nix
+    inputs.sops-nix.nixosModules.sops
   ];
 
   # Hostname
@@ -89,6 +92,13 @@
     symbols-only
     tinos
   ];
+
+  sops = {
+    defaultSopsFile = ../../secrets/nextdns.yaml;
+    age.keyFile = "/home/samir/.config/sops/age/keys.txt";
+    
+    secrets.nextdns_config = {};
+  };
 
   # Default editor
   # environment.variables.EDITOR = "vim";
