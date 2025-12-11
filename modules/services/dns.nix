@@ -29,7 +29,7 @@
     fallbackDns = [ "1.1.1.1" "9.9.9.9" ];
     extraConfig = ''
       DNS=192.168.1.181#homelab.terrier-duck.ts.net
-      DNSOverTLS=opportunistic
+      DNSOverTLS=yes
     '';
   };
 
