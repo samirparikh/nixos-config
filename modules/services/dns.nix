@@ -23,14 +23,22 @@
 #  };
 
 # Comment out these lines to disable AdGuard Home
-  networking = {
-    nameservers = [ "192.168.1.181" ];
-    networkmanager.dns = "none";
-    resolvconf.useLocalResolver = false;
+  services.resolved = {
+    enable = true;
+    dnssec = "allow-downgrade";
+    fallbackDns = [ "1.1.1.1" "9.9.9.9" ];
+    extraConfig = ''
+      DNS=192.168.1.181#homelab.terrier-duck.ts.net
+      DNSOverTLS=opportunistic
+    '';
   };
-  
-  environment.etc."resolv.conf".text = ''
-    nameserver 192.168.1.181
-  '';
+
+  networking.networkmanager = {
+    dns = "systemd-resolved";
+    connectionConfig = {
+      "ipv4.ignore-auto-dns" = true;
+      "ipv6.ignore-auto-dns" = true;
+    };
+  };
 # End AdGuard Home configuration
 }
