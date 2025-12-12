@@ -11,4 +11,7 @@
 
   # enable tailscale
   services.tailscale.enable = true;
+
+  # allow incoming TCP connections to port 8000
+  networking.firewall.allowedTCPPorts = [ 8000 ];
 }
