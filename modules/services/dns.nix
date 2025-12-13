@@ -28,8 +28,7 @@
     dnssec = "allow-downgrade";
     fallbackDns = [ "1.1.1.1" "9.9.9.9" ];
     extraConfig = ''
-      DNS=192.168.1.229#winserv.terrier-duck.ts.net
-      DNSOverTLS=yes
+      DNS=192.168.1.229
     '';
   };
 
