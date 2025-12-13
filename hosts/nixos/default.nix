@@ -15,7 +15,7 @@
     # ../../modules/system/virtualization.nix
     ../../modules/services/services.nix
     ../../modules/services/backup.nix
-    ../../modules/services/nextdns.nix
+    ../../modules/services/dns.nix
     ../../modules/hardware/audio.nix
     ../../modules/hardware/graphics.nix
     ../../modules/hardware/bluetooth.nix
