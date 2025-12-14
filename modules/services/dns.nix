@@ -25,10 +25,9 @@
 # Comment out these lines to disable AdGuard Home
   services.resolved = {
     enable = true;
-    dnssec = "allow-downgrade";
-    fallbackDns = [ "1.1.1.1" "9.9.9.9" ];
+    dnssec = "false";
     extraConfig = ''
-      DNS=192.168.1.229
+      DNS=192.168.1.181
     '';
   };
 
