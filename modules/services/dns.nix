@@ -67,4 +67,6 @@
       ip6tables -D OUTPUT -p tcp --dport 53 -j REJECT 2>/dev/null || true
     '';
   };
+
+  networking.search = [ "terrier-duck.ts.net" ];
 }
