@@ -96,8 +96,11 @@
   sops = {
     defaultSopsFile = ../../secrets/nextdns.yaml;
     age.keyFile = "/home/samir/.config/sops/age/keys.txt";
-    
+
     secrets.nextdns_config = {};
+    secrets.search_domain = {
+      sopsFile = ../../secrets/search-domain.yaml;
+    };
   };
 
   # Default editor

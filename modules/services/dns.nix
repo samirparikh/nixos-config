@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   environment.systemPackages = with pkgs; [ nextdns ];
@@ -41,8 +41,8 @@
     enable = true;
     extraCommands = ''
       # Allow DNS to AdGuard Home only (IPv4)
-      iptables -I OUTPUT -p udp --dport 53 -d 192.168.1.181 -j ACCEPT
-      iptables -I OUTPUT -p tcp --dport 53 -d 192.168.1.181 -j ACCEPT
+      iptables -I OUTPUT -p udp --dport 53 -d 192.168.1.229 -j ACCEPT
+      iptables -I OUTPUT -p tcp --dport 53 -d 192.168.1.229 -j ACCEPT
       
       # Allow local stub resolver
       iptables -I OUTPUT -p udp --dport 53 -d 127.0.0.0/8 -j ACCEPT
@@ -57,8 +57,8 @@
       ip6tables -A OUTPUT -p tcp --dport 53 -j REJECT
     '';
     extraStopCommands = ''
-      iptables -D OUTPUT -p udp --dport 53 -d 192.168.1.181 -j ACCEPT 2>/dev/null || true
-      iptables -D OUTPUT -p tcp --dport 53 -d 192.168.1.181 -j ACCEPT 2>/dev/null || true
+      iptables -D OUTPUT -p udp --dport 53 -d 192.168.1.229 -j ACCEPT 2>/dev/null || true
+      iptables -D OUTPUT -p tcp --dport 53 -d 192.168.1.229 -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p udp --dport 53 -d 127.0.0.0/8 -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p tcp --dport 53 -d 127.0.0.0/8 -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p udp --dport 53 -j REJECT 2>/dev/null || true
@@ -68,5 +68,5 @@
     '';
   };
 
-  networking.search = [ "terrier-duck.ts.net" ];
+  networking.search = [ (lib.strings.removeSuffix "\n" (builtins.readFile config.sops.secrets.search_domain.path)) ];
 }
