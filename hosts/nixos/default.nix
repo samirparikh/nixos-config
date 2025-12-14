@@ -60,7 +60,7 @@
     libimobiledevice
     ifuse
     # Host-specific: speedup package
-    inputs.speedup.packages.${pkgs.system}.speedup
+    inputs.speedup.packages.${pkgs.stdenv.hostPlatform.system}.speedup
   ];
 
   # Install Nerd Fonts
