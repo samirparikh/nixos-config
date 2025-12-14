@@ -37,6 +37,8 @@
     python3
     dig
     claude-code
+    sops
+    age
   ];
 
   # Let Home Manager install and manage itself
