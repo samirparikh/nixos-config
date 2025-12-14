@@ -26,6 +26,7 @@
   services.resolved = {
     enable = true;
     dnssec = "false";
+    fallbackDns = [];  # Explicitly disable built-in fallbacks
     extraConfig = ''
       DNS=192.168.1.181
     '';
