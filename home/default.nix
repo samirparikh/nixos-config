@@ -34,6 +34,8 @@
     microsoft-edge
     tree
     freetube
+    python3
+    dig
   ];
 
   # Let Home Manager install and manage itself
