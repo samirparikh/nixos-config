@@ -36,6 +36,7 @@
     freetube
     python3
     dig
+    claude-code
   ];
 
   # Let Home Manager install and manage itself
