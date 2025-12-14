@@ -68,5 +68,24 @@
     '';
   };
 
-  networking.search = [ (lib.strings.removeSuffix "\n" (builtins.readFile config.sops.secrets.search_domain.path)) ];
+  # Configure search domain at runtime from secret
+  systemd.services.configure-search-domain = {
+    description = "Configure systemd-resolved search domain from secret";
+    wantedBy = [ "multi-user.target" ];
+    before = [ "systemd-resolved.service" ];
+    
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    
+    script = ''
+      SEARCH_DOMAIN=$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.search_domain.path})
+      ${pkgs.coreutils}/bin/mkdir -p /etc/systemd/resolved.conf.d
+      ${pkgs.coreutils}/bin/cat > /etc/systemd/resolved.conf.d/90-search-domain.conf << EOF
+      [Resolve]
+      Domains=$SEARCH_DOMAIN
+      EOF
+    '';
+  };
 }
