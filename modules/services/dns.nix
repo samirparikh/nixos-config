@@ -19,7 +19,7 @@
     dnssec = "false";
     fallbackDns = [];
     extraConfig = ''
-      DNS=192.168.1.181
+      DNS=192.168.1.229
       Domains=~.
       DNSOverTLS=no
       MulticastDNS=no
