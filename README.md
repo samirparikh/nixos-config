@@ -145,7 +145,6 @@ This configuration uses [sops-nix](https://github.com/Mic92/sops-nix) to securel
    ```
 
 2. **Edit the secret** in your editor (SOPS will decrypt it automatically):
-   To edit the file:
    ```
    sops secretsfile.yaml
    ```
