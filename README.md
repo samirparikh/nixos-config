@@ -145,7 +145,14 @@ This configuration uses [sops-nix](https://github.com/Mic92/sops-nix) to securel
    ```
 
 2. **Edit the secret** in your editor (SOPS will decrypt it automatically):
-   ```yaml
+   To edit the file:
+   ```
+   sops secretsfile.yaml
+   ```
+   To view the secret:
+   ```
+   sops -d secretsfile.yaml
+
    # Example secret structure
    my_api_key: sk-1234567890abcdef
    database_password: super-secret-password
