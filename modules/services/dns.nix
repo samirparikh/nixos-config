@@ -19,7 +19,7 @@
     dnssec = "false";
     fallbackDns = [];
     extraConfig = ''
-      DNS=192.168.1.229
+      DNS=192.168.1.181
       Domains=~.
       DNSOverTLS=no
       MulticastDNS=no
@@ -41,8 +41,8 @@
     enable = true;
     extraCommands = ''
       # Allow DNS to AdGuard Home only (IPv4)
-      iptables -I OUTPUT -p udp --dport 53 -d 192.168.1.229 -j ACCEPT
-      iptables -I OUTPUT -p tcp --dport 53 -d 192.168.1.229 -j ACCEPT
+      iptables -I OUTPUT -p udp --dport 53 -d 192.168.1.181 -j ACCEPT
+      iptables -I OUTPUT -p tcp --dport 53 -d 192.168.1.181 -j ACCEPT
       
       # Allow local stub resolver
       iptables -I OUTPUT -p udp --dport 53 -d 127.0.0.0/8 -j ACCEPT
@@ -57,8 +57,8 @@
       ip6tables -A OUTPUT -p tcp --dport 53 -j REJECT
     '';
     extraStopCommands = ''
-      iptables -D OUTPUT -p udp --dport 53 -d 192.168.1.229 -j ACCEPT 2>/dev/null || true
-      iptables -D OUTPUT -p tcp --dport 53 -d 192.168.1.229 -j ACCEPT 2>/dev/null || true
+      iptables -D OUTPUT -p udp --dport 53 -d 192.168.1.181 -j ACCEPT 2>/dev/null || true
+      iptables -D OUTPUT -p tcp --dport 53 -d 192.168.1.181 -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p udp --dport 53 -d 127.0.0.0/8 -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p tcp --dport 53 -d 127.0.0.0/8 -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p udp --dport 53 -j REJECT 2>/dev/null || true
