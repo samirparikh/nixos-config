@@ -13,11 +13,11 @@
     ];
   };
 
-  # DNS Configuration - AdGuard Home
+  # DNS Configuration - AdGuard Home with fallbacks
   services.resolved = {
     enable = true;
     dnssec = "false";
-    fallbackDns = [];
+    fallbackDns = [ "100.100.100.100" "1.1.1.1" "9.9.9.9" ];
     extraConfig = ''
       DNS=192.168.1.181
       Domains=~.
@@ -36,57 +36,32 @@
     };
   };
 
-  # Firewall: block all DNS except to AdGuard
-#  networking.firewall = {
-#    enable = true;
-#    extraCommands = ''
-#      # Allow DNS to AdGuard Home only (IPv4)
-#      iptables -I OUTPUT -p udp --dport 53 -d 192.168.1.181 -j ACCEPT
-#      iptables -I OUTPUT -p tcp --dport 53 -d 192.168.1.181 -j ACCEPT
-#      
-#      # Allow local stub resolver
-#      iptables -I OUTPUT -p udp --dport 53 -d 127.0.0.0/8 -j ACCEPT
-#      iptables -I OUTPUT -p tcp --dport 53 -d 127.0.0.0/8 -j ACCEPT
-#      
-#      # Block all other IPv4 DNS
-#      iptables -A OUTPUT -p udp --dport 53 -j REJECT
-#      iptables -A OUTPUT -p tcp --dport 53 -j REJECT
-#      
-#      # Block ALL IPv6 DNS (leak prevention)
-#      ip6tables -A OUTPUT -p udp --dport 53 -j REJECT
-#      ip6tables -A OUTPUT -p tcp --dport 53 -j REJECT
-#    '';
-#    extraStopCommands = ''
-#      iptables -D OUTPUT -p udp --dport 53 -d 192.168.1.181 -j ACCEPT 2>/dev/null || true
-#      iptables -D OUTPUT -p tcp --dport 53 -d 192.168.1.181 -j ACCEPT 2>/dev/null || true
-#      iptables -D OUTPUT -p udp --dport 53 -d 127.0.0.0/8 -j ACCEPT 2>/dev/null || true
-#      iptables -D OUTPUT -p tcp --dport 53 -d 127.0.0.0/8 -j ACCEPT 2>/dev/null || true
-#      iptables -D OUTPUT -p udp --dport 53 -j REJECT 2>/dev/null || true
-#      iptables -D OUTPUT -p tcp --dport 53 -j REJECT 2>/dev/null || true
-#      ip6tables -D OUTPUT -p udp --dport 53 -j REJECT 2>/dev/null || true
-#      ip6tables -D OUTPUT -p tcp --dport 53 -j REJECT 2>/dev/null || true
-#    '';
-#  };
-
+  # Firewall: allow DNS only to approved servers
   networking.firewall = {
     enable = true;
     extraCommands = ''
-      # Allow DNS to AdGuard Home only (IPv4)
+      # Allow DNS to AdGuard Home (primary)
       iptables -I OUTPUT -p udp --dport 53 -d 192.168.1.181 -j ACCEPT
       iptables -I OUTPUT -p tcp --dport 53 -d 192.168.1.181 -j ACCEPT
-  
-      # Allow DNS to Tailscale MagicDNS
+
+      # Allow DNS to Tailscale MagicDNS (fallback 1)
       iptables -I OUTPUT -p udp --dport 53 -d 100.100.100.100 -j ACCEPT
       iptables -I OUTPUT -p tcp --dport 53 -d 100.100.100.100 -j ACCEPT
-  
+
+      # Allow DNS to Cloudflare and Quad9 (fallback 2)
+      iptables -I OUTPUT -p udp --dport 53 -d 1.1.1.1 -j ACCEPT
+      iptables -I OUTPUT -p tcp --dport 53 -d 1.1.1.1 -j ACCEPT
+      iptables -I OUTPUT -p udp --dport 53 -d 9.9.9.9 -j ACCEPT
+      iptables -I OUTPUT -p tcp --dport 53 -d 9.9.9.9 -j ACCEPT
+
       # Allow local stub resolver
       iptables -I OUTPUT -p udp --dport 53 -d 127.0.0.0/8 -j ACCEPT
       iptables -I OUTPUT -p tcp --dport 53 -d 127.0.0.0/8 -j ACCEPT
-  
+
       # Block all other IPv4 DNS
       iptables -A OUTPUT -p udp --dport 53 -j REJECT
       iptables -A OUTPUT -p tcp --dport 53 -j REJECT
-  
+
       # Block ALL IPv6 DNS (leak prevention)
       ip6tables -A OUTPUT -p udp --dport 53 -j REJECT
       ip6tables -A OUTPUT -p tcp --dport 53 -j REJECT
@@ -96,6 +71,10 @@
       iptables -D OUTPUT -p tcp --dport 53 -d 192.168.1.181 -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p udp --dport 53 -d 100.100.100.100 -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p tcp --dport 53 -d 100.100.100.100 -j ACCEPT 2>/dev/null || true
+      iptables -D OUTPUT -p udp --dport 53 -d 1.1.1.1 -j ACCEPT 2>/dev/null || true
+      iptables -D OUTPUT -p tcp --dport 53 -d 1.1.1.1 -j ACCEPT 2>/dev/null || true
+      iptables -D OUTPUT -p udp --dport 53 -d 9.9.9.9 -j ACCEPT 2>/dev/null || true
+      iptables -D OUTPUT -p tcp --dport 53 -d 9.9.9.9 -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p udp --dport 53 -d 127.0.0.0/8 -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p tcp --dport 53 -d 127.0.0.0/8 -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p udp --dport 53 -j REJECT 2>/dev/null || true
