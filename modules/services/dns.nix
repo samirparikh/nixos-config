@@ -58,6 +58,10 @@
       iptables -I OUTPUT -p udp --dport 53 -d 127.0.0.0/8 -j ACCEPT
       iptables -I OUTPUT -p tcp --dport 53 -d 127.0.0.0/8 -j ACCEPT
 
+      # Allow Mullvad internal DNS
+      iptables -I OUTPUT -p udp --dport 53 -d 10.64.0.1 -j ACCEPT
+      iptables -I OUTPUT -p tcp --dport 53 -d 10.64.0.1 -j ACCEPT
+
       # Block all other IPv4 DNS
       iptables -A OUTPUT -p udp --dport 53 -j REJECT
       iptables -A OUTPUT -p tcp --dport 53 -j REJECT
@@ -81,6 +85,10 @@
       iptables -D OUTPUT -p tcp --dport 53 -j REJECT 2>/dev/null || true
       ip6tables -D OUTPUT -p udp --dport 53 -j REJECT 2>/dev/null || true
       ip6tables -D OUTPUT -p tcp --dport 53 -j REJECT 2>/dev/null || true
+      # Mullvad Configuration
+      iptables -D OUTPUT -p udp --dport 53 -d 10.64.0.1 -j ACCEPT 2>/dev/null || true
+      iptables -D OUTPUT -p tcp --dport 53 -d 10.64.0.1 -j ACCEPT 2>/dev/null || true
+
     '';
   };
 

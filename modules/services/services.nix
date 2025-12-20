@@ -14,4 +14,9 @@
 
   # allow incoming TCP connections to port 8000
   networking.firewall.allowedTCPPorts = [ 8000 ];
+
+  services.mullvad-vpn = {
+    enable = true;
+    package = pkgs.mullvad-vpn;
+  };
 }

@@ -39,6 +39,12 @@
     claude-code
     sops
     age
+    mullvad-browser
+    tor-browser
+    pv
+    sshfs
+    butane
+    htop
   ];
 
   # Let Home Manager install and manage itself
