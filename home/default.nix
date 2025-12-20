@@ -45,6 +45,8 @@
     sshfs
     butane
     htop
+    qbittorrent
+    transmission_4
   ];
 
   # Let Home Manager install and manage itself
