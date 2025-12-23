@@ -19,7 +19,7 @@
     dnssec = "false";
     # fallbackDns = [ "100.100.100.100" "1.1.1.1" "9.9.9.9" ];
     extraConfig = ''
-      DNS=192.168.1.229
+      DNS=1.1.1.1
       Domains=~.
       DNSOverTLS=no
       MulticastDNS=no
@@ -38,7 +38,7 @@
 
   # Firewall: allow DNS only to approved servers
   networking.firewall = {
-    enable = true;
+    enable = false;
     extraCommands = ''
       # Allow DNS to AdGuard Home (primary)
       iptables -I OUTPUT -p udp --dport 53 -d 192.168.1.229 -j ACCEPT
