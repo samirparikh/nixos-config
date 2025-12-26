@@ -5,7 +5,7 @@
     enable = true;
     
     # SSH Configuration
-    sshHost = "beelinkbackup";
+    sshHost = "blbu";
     sshUser = "samir";
     sshConfig = "/home/samir/.ssh/config";
     
