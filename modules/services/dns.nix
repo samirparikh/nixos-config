@@ -38,7 +38,7 @@
 
   # Firewall: allow DNS only to approved servers
   networking.firewall = {
-    enable = false;
+    enable = true;
     extraCommands = ''
       # Allow DNS to AdGuard Home (primary)
       iptables -I OUTPUT -p udp --dport 53 -d 192.168.1.229 -j ACCEPT
