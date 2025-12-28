@@ -19,7 +19,7 @@
       Documents = "/home/samir/Documents";
       Music = "/home/samir/Music";
       Pictures = "/home/samir/Pictures";
-      Videos = "/home/samir/Videos";
+      # Videos = "/home/samir/Videos";
     };
     
     # Retention
@@ -48,8 +48,8 @@
     
     serviceConfig = {
       ExecStartPre = "${pkgs.coreutils}/bin/sleep 30";
-      Restart = "on-failure";
-      RestartSec = "2min";
+      # Restart = "on-failure";
+      # RestartSec = "2min";
     };
   };
 }
