@@ -46,7 +46,7 @@
     butane
     htop
     qbittorrent
-    transmission_4
+    bitwarden-desktop
   ];
 
   # Let Home Manager install and manage itself
