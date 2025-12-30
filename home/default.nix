@@ -47,6 +47,9 @@
     htop
     qbittorrent
     bitwarden-desktop
+    virt-viewer
+    spice-gtk
+    libproxy
   ];
 
   # Let Home Manager install and manage itself

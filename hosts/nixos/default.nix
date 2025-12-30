@@ -103,8 +103,11 @@
     };
   };
 
-  # Default editor
-  environment.variables.EDITOR = "vim";
+  # Environment variables
+  environment.variables = {
+    EDITOR = "vim";
+    GTK_MODULES = "";
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
