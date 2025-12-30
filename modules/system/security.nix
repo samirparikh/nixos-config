@@ -9,4 +9,8 @@
 
   # RTKit for real-time scheduling
   security.rtkit.enable = true;
+
+  security.pki.certificateFiles = [
+    ../../certs/vaultwarden.crt
+  ];
 }
