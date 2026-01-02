@@ -43,13 +43,10 @@
     tor-browser
     pv
     sshfs
-    butane
     htop
     qbittorrent
     bitwarden-desktop
-    virt-viewer
-    spice-gtk
-    libproxy
+    haruna
   ];
 
   # Let Home Manager install and manage itself
