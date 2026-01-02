@@ -19,4 +19,6 @@
     enable = true;
     package = pkgs.mullvad-vpn;
   };
+
+  services.uptime-kuma.enable = true;
 }
