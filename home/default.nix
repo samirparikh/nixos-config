@@ -47,6 +47,7 @@
     qbittorrent
     bitwarden-desktop
     haruna
+    nodejs_22
   ];
 
   # Let Home Manager install and manage itself
