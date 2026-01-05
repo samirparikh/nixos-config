@@ -48,6 +48,9 @@
     bitwarden-desktop
     haruna
     nodejs_22
+    qownnotes
+    joplin-desktop
+    trilium-desktop
   ];
 
   # Let Home Manager install and manage itself
