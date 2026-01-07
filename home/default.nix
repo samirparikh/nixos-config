@@ -50,7 +50,6 @@
     nodejs_22
     qownnotes
     joplin-desktop
-    trilium-desktop
   ];
 
   # Let Home Manager install and manage itself
