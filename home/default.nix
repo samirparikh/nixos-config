@@ -45,7 +45,6 @@
     sshfs
     htop
     qbittorrent
-    bitwarden-desktop
     haruna
     nodejs_22
     kdePackages.kclock
