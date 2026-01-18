@@ -21,7 +21,8 @@
     # TODO: Adjust this to your actual root device
     # Find it with: findmnt -n -o SOURCE / | xargs -I{} lsblk -no PKNAME {}
     # Or check your existing filesystems-home.nix for the device
-    device = "/dev/disk/by-label/nixos";
+    # device = "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-uuid/f4aa8ad6-e4af-4796-969a-6b2fae9aad15";
     fsType = "btrfs";
     options = [
       "subvolid=5"

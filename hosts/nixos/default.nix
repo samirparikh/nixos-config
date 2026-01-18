@@ -15,6 +15,7 @@
     # ../../modules/system/virtualization.nix
     ../../modules/services/services.nix
     ../../modules/services/backup.nix
+    ../../modules/services/btrbk.nix
     ../../modules/services/dns.nix
     ../../modules/services/uptime-kuma.nix
     ../../modules/hardware/audio.nix
