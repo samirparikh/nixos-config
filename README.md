@@ -33,6 +33,7 @@ nixos-config/
 │   ├── services/                  # Service configurations
 │   │   ├── services.nix           # General services
 │   │   ├── backup.nix             # Backup configuration
+│   │   ├── btrbk.nix              # Btrfs snapshot backups with btrbk
 │   │   └── dns.nix                # DNS and NextDNS configuration
 │   └── desktop/                   # Desktop environment modules
 │       └── kde.nix                # KDE Plasma configuration
@@ -236,9 +237,138 @@ config.sops.secrets.search_domain.path
 - Each secret file is encrypted with the public keys defined in `.sops.yaml`
 - Secrets are decrypted at activation time and made available to services
 
+## Btrfs Backups with btrbk
+
+This configuration uses [btrbk](https://digint.ch/btrbk/) to automatically back up btrfs subvolumes to a remote server via SSH.
+
+### Backup Schedule
+
+| Subvolume | Schedule | Local Retention | Remote Retention |
+|-----------|----------|-----------------|------------------|
+| `@home-Desktop` | Daily at 01:00 | 7 days | 7d, 4w, 3m |
+| `@home-Documents` | Daily at 01:00 | 7 days | 7d, 4w, 3m |
+| `@home-Music` | Weekly (Mon 13:00) | 4 weeks | 4w, 6m |
+| `@home-sites` | Weekly (Mon 13:00) | 4 weeks | 4w, 6m |
+
+Backups are sent to `blbu:/mnt/storage/snapshots/` with subdirectories for each subvolume.
+
+### Prerequisites
+
+1. **Mount the btrfs root** - The module mounts the filesystem root at `/mnt/btrfs-root` to access all subvolumes.
+
+2. **Create local snapshot directory**:
+   ```bash
+   sudo mkdir -p /mnt/btrfs-root/.snapshots
+   ```
+
+3. **Generate SSH key for btrbk** (as root):
+   ```bash
+   sudo ssh-keygen -t ed25519 -f /root/.ssh/btrbk_ed25519 -N ""
+   ```
+
+4. **Copy public key to remote server**:
+   ```bash
+   sudo cat /root/.ssh/btrbk_ed25519.pub | ssh blbu "cat >> ~/.ssh/authorized_keys"
+   ```
+
+5. **Create SSH config for root** at `/root/.ssh/config`:
+   ```
+   Host blbu
+       HostName <IP address>
+       User queenbee
+       Port <port>
+       IdentityFile /root/.ssh/btrbk_ed25519
+   ```
+
+6. **Create target directories on remote**:
+   ```bash
+   ssh blbu "sudo mkdir -p /mnt/storage/snapshots/{Desktop,Documents,Music,sites}"
+   ```
+
+### Checking Backup Status
+
+**View scheduled timers**:
+```bash
+systemctl list-timers 'btrbk-*'
+```
+
+**Check service status**:
+```bash
+systemctl status btrbk-daily.service
+systemctl status btrbk-weekly.service
+```
+
+### Viewing Logs
+
+```bash
+# All btrbk logs
+journalctl -u 'btrbk-*'
+
+# Daily backup logs
+journalctl -u btrbk-daily.service
+
+# Weekly backup logs
+journalctl -u btrbk-weekly.service
+
+# Follow logs in real-time
+journalctl -fu btrbk-daily.service
+
+# Most recent run (jump to end)
+journalctl -u btrbk-daily.service -e
+```
+
+### Manual Backup Commands
+
+```bash
+# Dry run (preview without making changes)
+sudo btrbk -c /etc/btrbk/daily.conf dryrun
+sudo btrbk -c /etc/btrbk/weekly.conf dryrun
+
+# Run backup manually
+sudo btrbk -c /etc/btrbk/daily.conf run
+sudo btrbk -c /etc/btrbk/weekly.conf run
+
+# List all snapshots
+sudo btrbk -c /etc/btrbk/daily.conf list
+
+# Show backup statistics
+sudo btrbk -c /etc/btrbk/daily.conf stats
+```
+
+### Snapshot Naming
+
+Snapshots use the `long` timestamp format and are stored as:
+```
+<snapshot_name>.<YYYYMMDDTHHMMSS>
+```
+
+Example remote structure after several backups:
+```
+/mnt/storage/snapshots/
+├── Desktop/
+│   ├── Desktop.20260118T010000
+│   ├── Desktop.20260119T010000
+│   └── Desktop.20260120T010000
+├── Documents/
+│   └── ...
+├── Music/
+│   └── ...
+└── sites/
+    └── ...
+```
+
+### Configuration
+
+The btrbk configuration is defined in `modules/services/btrbk.nix` and generates:
+- `/etc/btrbk/daily.conf` - Daily backup configuration
+- `/etc/btrbk/weekly.conf` - Weekly backup configuration
+- `btrbk-daily.timer` / `btrbk-daily.service` - Systemd units for daily backups
+- `btrbk-weekly.timer` / `btrbk-weekly.service` - Systemd units for weekly backups
+
 ## Resources
 
 - [NixOS Manual](https://nixos.org/manual/nixos/stable/)
 - [Home Manager Manual](https://nix-community.github.io/home-manager/)
 - [Nix Flakes](https://nixos.wiki/wiki/Flakes)
 - [sops-nix Documentation](https://github.com/Mic92/sops-nix)
+- [btrbk Documentation](https://digint.ch/btrbk/doc/btrbk.1.html)
