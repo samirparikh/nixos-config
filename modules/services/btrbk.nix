@@ -36,7 +36,7 @@
     # Daily backups: Desktop and Documents
     # -------------------------------------------------------------------------
     daily = {
-      onCalendar = "daily";
+      onCalendar = "*-*-* 01:00:00";
       settings = {
         timestamp_format = "long";
         ssh_identity = "/root/.ssh/btrbk_ed25519";
@@ -74,7 +74,7 @@
     # Weekly backups: Music and sites
     # -------------------------------------------------------------------------
     weekly = {
-      onCalendar = "weekly";
+      onCalendar = "Mon *-*-* 13:00:00";
       settings = {
         timestamp_format = "long";
         ssh_identity = "/root/.ssh/btrbk_ed25519";
