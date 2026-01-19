@@ -23,10 +23,17 @@ else
 fi
 
 # Parse btrbk output for summary
-SNAPSHOTS_CREATED=$(grep -c '^\+\+\+' "$OUTPUT_FILE" 2>/dev/null || echo "0")
-SNAPSHOTS_SENT=$(grep -cE '^\*\*\*|^>>>' "$OUTPUT_FILE" 2>/dev/null || echo "0")
-ERRORS=$(grep -ciE '(error|failed|aborted)' "$OUTPUT_FILE" 2>/dev/null || echo "0")
-WARNINGS=$(grep -c '^WARNING' "$OUTPUT_FILE" 2>/dev/null || echo "0")
+SNAPSHOTS_CREATED=$(grep '^\+\+\+' "$OUTPUT_FILE" 2>/dev/null | wc -l | tr -d ' ')
+SNAPSHOTS_SENT=$(grep -E '^\*\*\*|^>>>' "$OUTPUT_FILE" 2>/dev/null | wc -l | tr -d ' ')
+# Look for btrbk-specific error indicators (not just any word "error")
+ERRORS=$(grep -E '^!!!|^ERROR' "$OUTPUT_FILE" 2>/dev/null | wc -l | tr -d ' ')
+WARNINGS=$(grep '^WARNING' "$OUTPUT_FILE" 2>/dev/null | wc -l | tr -d ' ')
+
+# Ensure numeric values (default to 0 if empty)
+: "${SNAPSHOTS_CREATED:=0}"
+: "${SNAPSHOTS_SENT:=0}"
+: "${ERRORS:=0}"
+: "${WARNINGS:=0}"
 
 # Extract subvolume names that were processed
 SUBVOLUMES=$(grep -oP '(?<=^/mnt/btrfs-root/)@home-\w+' "$OUTPUT_FILE" | sort -u | tr '\n' ', ' | sed 's/,$//')
@@ -57,7 +64,7 @@ else
     TAGS="x"
     
     # Extract last few error lines for context
-    ERROR_CONTEXT=$(grep -iE '(error|failed|aborted|warning)' "$OUTPUT_FILE" | tail -5)
+    ERROR_CONTEXT=$(grep -E '^!!!|^ERROR|^WARNING' "$OUTPUT_FILE" | tail -5)
     
     MESSAGE="Exit code: ${BTRBK_EXIT}
 Errors: ${ERRORS}
