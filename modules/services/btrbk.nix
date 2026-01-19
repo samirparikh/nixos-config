@@ -36,7 +36,7 @@
     # Daily backups: Desktop and Documents
     # -------------------------------------------------------------------------
     daily = {
-      onCalendar = "*-*-* 01:00:00";
+      onCalendar = "*-*-* 07:00:00";
       settings = {
         timestamp_format = "long";
         ssh_identity = "/root/.ssh/btrbk_ed25519";
@@ -110,4 +110,35 @@
 
   # Useful for manual runs and debugging
   environment.systemPackages = [ pkgs.btrbk ];
+
+  # ---------------------------------------------------------------------------
+  # Notifications via ntfy using wrapper script
+  # ---------------------------------------------------------------------------
+  
+  # Install the wrapper script
+  environment.etc."btrbk/btrbk-notify.sh" = {
+    source = ./btrbk-notify.sh;
+    mode = "0755";
+  };
+
+  # Override btrbk services to use the wrapper script and run as root
+  systemd.services.btrbk-daily = {
+    serviceConfig.ExecStart = lib.mkForce [
+      ""  # Clear the default ExecStart
+      "${pkgs.bash}/bin/bash /etc/btrbk/btrbk-notify.sh daily /etc/btrbk/daily.conf"
+    ];
+    serviceConfig.User = lib.mkForce "root";
+    serviceConfig.Group = lib.mkForce "root";
+    path = [ pkgs.btrbk pkgs.curl pkgs.gnugrep pkgs.gnused pkgs.coreutils ];
+  };
+
+  systemd.services.btrbk-weekly = {
+    serviceConfig.ExecStart = lib.mkForce [
+      ""
+      "${pkgs.bash}/bin/bash /etc/btrbk/btrbk-notify.sh weekly /etc/btrbk/weekly.conf"
+    ];
+    serviceConfig.User = lib.mkForce "root";
+    serviceConfig.Group = lib.mkForce "root";
+    path = [ pkgs.btrbk pkgs.curl pkgs.gnugrep pkgs.gnused pkgs.coreutils ];
+  };
 }
