@@ -141,4 +141,7 @@
     serviceConfig.Group = lib.mkForce "root";
     path = [ pkgs.btrbk pkgs.curl pkgs.gnugrep pkgs.gnused pkgs.coreutils ];
   };
+
+  systemd.timers.btrbk-daily.timerConfig.WakeSystem = true;
+  systemd.timers.btrbk-weekly.timerConfig.WakeSystem = true;
 }
