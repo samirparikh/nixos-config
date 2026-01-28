@@ -45,7 +45,6 @@
     sshfs
     htop
     qbittorrent
-    haruna
     nodejs_22
     kdePackages.kclock
     weechat
