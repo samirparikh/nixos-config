@@ -13,6 +13,7 @@
     ./programs/terminal/vim
     ./programs/terminal/tmux
     ./programs/terminal/starship.nix
+    ./programs/direnv.nix
 
     # Host-specific: catppuccin theme module
     inputs.catppuccin.homeModules.catppuccin
