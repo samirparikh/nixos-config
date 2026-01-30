@@ -22,6 +22,7 @@
     ../../modules/hardware/graphics.nix
     ../../modules/hardware/bluetooth.nix
     ../../modules/desktop/kde.nix
+    ../../modules/desktop/nix-ld.nix
 
     # Host-specific: btrfs-backup module
     inputs.btrfs-backup.nixosModules.default
