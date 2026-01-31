@@ -49,6 +49,8 @@
     nodejs_22
     kdePackages.kclock
     weechat
+    exercism
+    jetbrains.rider
   ];
 
   # Let Home Manager install and manage itself
