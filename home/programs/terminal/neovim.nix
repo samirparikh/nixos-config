@@ -1,13 +1,6 @@
 { config, pkgs, inputs, ... }:
 
 {
-  # Source the API key in fish shell from sops secret
-  programs.fish.interactiveShellInit = ''
-    if test -r ${config.sops.secrets.anthropic-api-key.path}
-      set -gx ANTHROPIC_API_KEY (cat ${config.sops.secrets.anthropic-api-key.path})
-    end
-  '';
-
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -27,7 +20,6 @@
       fd                 # for telescope
       tree-sitter        # for treesitter
       nodejs_22          # required for Copilot
-      curl               # required for avante.nvim
     ];
 
     plugins = with pkgs.vimPlugins; [
@@ -144,15 +136,8 @@
       }
 
       # ============================================================
-      # LSP Configuration (Neovim 0.11+ native API)
-      # ============================================================
-      # We still need nvim-lspconfig for the server configurations/cmd paths
-      # but we'll use vim.lsp.config() for the actual setup
-      nvim-lspconfig
-      cmp-nvim-lsp
-
-      # ============================================================
       # Autocompletion with nvim-cmp
+      # Note: No nvim-lspconfig needed - using native Neovim 0.11+ LSP API
       # ============================================================
       cmp-nvim-lsp
       cmp-buffer
@@ -288,81 +273,6 @@
         type = "lua";
         config = ''
           require("copilot_cmp").setup()
-        '';
-      }
-
-      # ============================================================
-      # Claude AI (via avante.nvim)
-      # ============================================================
-      dressing-nvim
-      nui-nvim
-      img-clip-nvim
-      {
-        plugin = render-markdown-nvim;
-        type = "lua";
-        config = ''
-          require("render-markdown").setup({
-            file_types = { "markdown", "Avante" },
-          })
-        '';
-      }
-      {
-        plugin = avante-nvim;
-        type = "lua";
-        config = ''
-          require("avante").setup({
-            provider = "claude",
-            claude = {
-              endpoint = "https://api.anthropic.com",
-              model = "claude-sonnet-4-20250514",
-              temperature = 0,
-              max_tokens = 8192,
-            },
-            behaviour = {
-              auto_suggestions = false,  -- Disabled to avoid conflict with Copilot
-              auto_set_highlight_group = true,
-              auto_set_keymaps = true,
-              support_paste_from_clipboard = true,
-            },
-            mappings = {
-              diff = {
-                ours = "co",
-                theirs = "ct",
-                all_theirs = "ca",
-                both = "cb",
-                cursor = "cc",
-                next = "]x",
-                prev = "[x",
-              },
-              jump = {
-                next = "]]",
-                prev = "[[",
-              },
-              submit = {
-                normal = "<CR>",
-                insert = "<C-s>",
-              },
-              ask = "<leader>aa",
-              edit = "<leader>ae",
-              refresh = "<leader>ar",
-              toggle = {
-                default = "<leader>at",
-                debug = "<leader>ad",
-                hint = "<leader>ah",
-                suggestion = "<leader>as",
-              },
-            },
-            hints = { enabled = true },
-            windows = {
-              position = "right",
-              wrap = true,
-              width = 40,
-              sidebar_header = {
-                align = "center",
-                rounded = true,
-              },
-            },
-          })
         '';
       }
 
@@ -552,7 +462,7 @@
           border = "rounded",
           source = true,
         },
-        -- New Neovim 0.11+ way to define diagnostic signs
+        -- Neovim 0.11+ diagnostic signs (replaces sign_define)
         signs = {
           text = {
             [vim.diagnostic.severity.ERROR] = " ",
@@ -564,10 +474,8 @@
       })
 
       -- ============================================================
-      -- LSP Configuration (Neovim 0.11+ native API)
+      -- LSP Configuration (Neovim 0.11+ native API - no lspconfig)
       -- ============================================================
-      -- Get capabilities from nvim-cmp
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       -- LSP keybindings (set up on LspAttach)
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -590,10 +498,11 @@
         end,
       })
 
-      -- Configure OmniSharp using Neovim 0.11+ native API
-      vim.lsp.config("omnisharp", {
+      -- Configure OmniSharp using Neovim 0.11+ native vim.lsp.config
+      vim.lsp.config.omnisharp = {
         cmd = { "${pkgs.omnisharp-roslyn}/bin/OmniSharp" },
-        capabilities = capabilities,
+        filetypes = { "cs", "vb" },
+        root_markers = { "*.sln", "*.csproj", "omnisharp.json", ".git" },
         settings = {
           FormattingOptions = {
             EnableEditorConfigSupport = true,
@@ -604,10 +513,9 @@
             EnableImportCompletion = true,
           },
         },
-        root_markers = { "*.sln", "*.csproj", ".git" },
-      })
+      }
 
-      -- Enable the LSP server
+      -- Enable OmniSharp
       vim.lsp.enable("omnisharp")
 
       -- ============================================================
