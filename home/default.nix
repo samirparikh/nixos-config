@@ -11,6 +11,7 @@
     ./programs/terminal/fish.nix
     ./programs/terminal/git.nix
     ./programs/terminal/vim
+    ./programs/terminal/neovim.nix
     ./programs/terminal/tmux
     ./programs/terminal/starship.nix
     ./programs/direnv.nix
@@ -51,6 +52,8 @@
     weechat
     exercism
     jetbrains.rider
+    dotnet-sdk_10
+    netcoredbg
   ];
 
   # Let Home Manager install and manage itself
