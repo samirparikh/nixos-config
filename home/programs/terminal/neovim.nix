@@ -499,10 +499,20 @@
       })
 
       -- Configure OmniSharp using Neovim 0.11+ native vim.lsp.config
+      -- Supports .sln, .slnx (new .NET 9 format), and .csproj files
       vim.lsp.config.omnisharp = {
         cmd = { "${pkgs.omnisharp-roslyn}/bin/OmniSharp" },
         filetypes = { "cs", "vb" },
-        root_markers = { "*.sln", "*.csproj", "omnisharp.json", ".git" },
+        root_dir = function(bufnr, on_dir)
+          local fname = vim.api.nvim_buf_get_name(bufnr)
+          -- Search for solution/project files in parent directories
+          local root = vim.fs.root(bufnr, function(name)
+            return name:match("%.sln$")
+                or name:match("%.slnx$")
+                or name:match("%.csproj$")
+          end)
+          on_dir(root or vim.fs.dirname(fname))
+        end,
         settings = {
           FormattingOptions = {
             EnableEditorConfigSupport = true,
