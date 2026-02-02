@@ -1,6 +1,13 @@
 { config, pkgs, inputs, ... }:
 
 {
+  # Source the API key in fish shell from sops secret
+  programs.fish.interactiveShellInit = ''
+    if test -r ${config.sops.secrets.anthropic-api-key.path}
+      set -gx ANTHROPIC_API_KEY (cat ${config.sops.secrets.anthropic-api-key.path})
+    end
+  '';
+
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -20,6 +27,7 @@
       fd                 # for telescope
       tree-sitter        # for treesitter
       nodejs_22          # required for Copilot
+      curl               # required for avante.nvim
     ];
 
     plugins = with pkgs.vimPlugins; [
@@ -136,59 +144,12 @@
       }
 
       # ============================================================
-      # LSP Configuration
+      # LSP Configuration (Neovim 0.11+ native API)
       # ============================================================
-      {
-        plugin = nvim-lspconfig;
-        type = "lua";
-        config = ''
-          local lspconfig = require("lspconfig")
-
-          -- Shared on_attach function for keybindings
-          local on_attach = function(client, bufnr)
-            local opts = { buffer = bufnr, silent = true }
-
-            vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-            vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-            vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-            vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-            vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
-            vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-            vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-            vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-            vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format({ async = true }) end, opts)
-            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-            vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
-          end
-
-          -- LSP capabilities (enhanced by nvim-cmp)
-          local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-          -- ========================================
-          -- Omnisharp (C# LSP)
-          -- ========================================
-          lspconfig.omnisharp.setup({
-            cmd = { "${pkgs.omnisharp-roslyn}/bin/OmniSharp" },
-            on_attach = on_attach,
-            capabilities = capabilities,
-            settings = {
-              FormattingOptions = {
-                EnableEditorConfigSupport = true,
-                OrganizeImports = true,
-              },
-              RoslynExtensionsOptions = {
-                EnableAnalyzersSupport = true,
-                EnableImportCompletion = true,
-              },
-            },
-            -- Enable semantic tokens for better highlighting
-            enable_roslyn_analyzers = true,
-            organize_imports_on_format = true,
-            enable_import_completion = true,
-          })
-        '';
-      }
+      # We still need nvim-lspconfig for the server configurations/cmd paths
+      # but we'll use vim.lsp.config() for the actual setup
+      nvim-lspconfig
+      cmp-nvim-lsp
 
       # ============================================================
       # Autocompletion with nvim-cmp
@@ -285,7 +246,7 @@
       }
 
       # ============================================================
-      # GitHub Copilot (AI completion)
+      # GitHub Copilot (AI completion - inline ghost text)
       # ============================================================
       {
         plugin = copilot-lua;
@@ -327,6 +288,81 @@
         type = "lua";
         config = ''
           require("copilot_cmp").setup()
+        '';
+      }
+
+      # ============================================================
+      # Claude AI (via avante.nvim)
+      # ============================================================
+      dressing-nvim
+      nui-nvim
+      img-clip-nvim
+      {
+        plugin = render-markdown-nvim;
+        type = "lua";
+        config = ''
+          require("render-markdown").setup({
+            file_types = { "markdown", "Avante" },
+          })
+        '';
+      }
+      {
+        plugin = avante-nvim;
+        type = "lua";
+        config = ''
+          require("avante").setup({
+            provider = "claude",
+            claude = {
+              endpoint = "https://api.anthropic.com",
+              model = "claude-sonnet-4-20250514",
+              temperature = 0,
+              max_tokens = 8192,
+            },
+            behaviour = {
+              auto_suggestions = false,  -- Disabled to avoid conflict with Copilot
+              auto_set_highlight_group = true,
+              auto_set_keymaps = true,
+              support_paste_from_clipboard = true,
+            },
+            mappings = {
+              diff = {
+                ours = "co",
+                theirs = "ct",
+                all_theirs = "ca",
+                both = "cb",
+                cursor = "cc",
+                next = "]x",
+                prev = "[x",
+              },
+              jump = {
+                next = "]]",
+                prev = "[[",
+              },
+              submit = {
+                normal = "<CR>",
+                insert = "<C-s>",
+              },
+              ask = "<leader>aa",
+              edit = "<leader>ae",
+              refresh = "<leader>ar",
+              toggle = {
+                default = "<leader>at",
+                debug = "<leader>ad",
+                hint = "<leader>ah",
+                suggestion = "<leader>as",
+              },
+            },
+            hints = { enabled = true },
+            windows = {
+              position = "right",
+              wrap = true,
+              width = 40,
+              sidebar_header = {
+                align = "center",
+                rounded = true,
+              },
+            },
+          })
         '';
       }
 
@@ -401,6 +437,7 @@
       # DAP (Debug Adapter Protocol) for debugging
       nvim-dap
       nvim-dap-ui
+      nvim-nio  # Required by nvim-dap-ui
       {
         plugin = nvim-dap;
         type = "lua";
@@ -504,6 +541,76 @@
       opt.completeopt = "menu,menuone,noselect"
 
       -- ============================================================
+      -- Diagnostics configuration (Neovim 0.11+ API)
+      -- ============================================================
+      vim.diagnostic.config({
+        virtual_text = true,
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+        float = {
+          border = "rounded",
+          source = true,
+        },
+        -- New Neovim 0.11+ way to define diagnostic signs
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.WARN] = " ",
+            [vim.diagnostic.severity.HINT] = "󰌵 ",
+            [vim.diagnostic.severity.INFO] = " ",
+          },
+        },
+      })
+
+      -- ============================================================
+      -- LSP Configuration (Neovim 0.11+ native API)
+      -- ============================================================
+      -- Get capabilities from nvim-cmp
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      -- LSP keybindings (set up on LspAttach)
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
+        callback = function(ev)
+          local opts = { buffer = ev.buf, silent = true }
+
+          vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+          vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+          vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+          vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+          vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+          vim.keymap.set("n", "<leader>f", function() vim.lsp.buf.format({ async = true }) end, opts)
+          vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+          vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+          vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
+        end,
+      })
+
+      -- Configure OmniSharp using Neovim 0.11+ native API
+      vim.lsp.config("omnisharp", {
+        cmd = { "${pkgs.omnisharp-roslyn}/bin/OmniSharp" },
+        capabilities = capabilities,
+        settings = {
+          FormattingOptions = {
+            EnableEditorConfigSupport = true,
+            OrganizeImports = true,
+          },
+          RoslynExtensionsOptions = {
+            EnableAnalyzersSupport = true,
+            EnableImportCompletion = true,
+          },
+        },
+        root_markers = { "*.sln", "*.csproj", ".git" },
+      })
+
+      -- Enable the LSP server
+      vim.lsp.enable("omnisharp")
+
+      -- ============================================================
       -- Keybindings
       -- ============================================================
       local keymap = vim.keymap.set
@@ -539,28 +646,6 @@
       -- Quick save
       keymap("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
       keymap("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
-
-      -- ============================================================
-      -- Diagnostics configuration
-      -- ============================================================
-      vim.diagnostic.config({
-        virtual_text = true,
-        signs = true,
-        underline = true,
-        update_in_insert = false,
-        severity_sort = true,
-        float = {
-          border = "rounded",
-          source = "always",
-        },
-      })
-
-      -- Diagnostic signs
-      local signs = { Error = " ", Warn = " ", Hint = "󰌵 ", Info = " " }
-      for type, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. type
-        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-      end
     '';
   };
 }
