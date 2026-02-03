@@ -501,7 +501,7 @@
       -- Configure OmniSharp using Neovim 0.11+ native vim.lsp.config
       -- Supports .sln, .slnx (new .NET 9 format), and .csproj files
       vim.lsp.config.omnisharp = {
-        cmd = { "${pkgs.omnisharp-roslyn}/bin/OmniSharp" },
+        cmd = { "${pkgs.omnisharp-roslyn}/bin/OmniSharp", "--languageserver" },
         filetypes = { "cs", "vb" },
         root_dir = function(bufnr, on_dir)
           local fname = vim.api.nvim_buf_get_name(bufnr)
