@@ -8,6 +8,7 @@
       la = "ls -a";
       home = "cd ~ || exit";
       nixos = "cd /home/samir/nixos-config/ || exit";
+      cses = "cd /home/samir/Documents/programming/csharp/cses/ || exit";
     };
   };
 }
