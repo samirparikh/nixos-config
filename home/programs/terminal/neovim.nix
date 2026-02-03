@@ -242,7 +242,7 @@
               enabled = true,
               auto_trigger = true,
               keymap = {
-                accept = "<M-l>",           -- Alt+l to accept
+                accept = "<Tab>",           -- Tab to accept
                 accept_word = "<M-k>",      -- Alt+k to accept word
                 accept_line = "<M-j>",      -- Alt+j to accept line
                 next = "<M-]>",
