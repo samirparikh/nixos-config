@@ -36,7 +36,7 @@
     # Daily backups: Desktop and Documents
     # -------------------------------------------------------------------------
     daily = {
-      onCalendar = "*-*-* 07:00:00";
+      onCalendar = "*-*-* 10:45:00";
       settings = {
         timestamp_format = "long";
         ssh_identity = "/root/.ssh/btrbk_ed25519";
