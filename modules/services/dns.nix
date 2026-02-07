@@ -17,6 +17,7 @@
   services.resolved = {
     enable = true;
     dnssec = "false";
+    fallbackDns = [];
     extraConfig = ''
       DNS=192.168.1.229
       Domains=~.
