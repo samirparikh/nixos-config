@@ -29,14 +29,14 @@
     # Logging
     logFile = "/var/log/btrfs-backup.log";
 
-    enableTimer = true;
+    enableTimer = false;
     timerSchedule = "10:00";
   };
 
   # Wake system from sleep for backup
   systemd.timers.btrfs-backup = {
     timerConfig = {
-      WakeSystem = true;
+      WakeSystem = false;
     };
   };
 
