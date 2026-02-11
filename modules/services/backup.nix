@@ -2,7 +2,7 @@
 
 {
   services.btrfs-backup = {
-    enable = true;
+    enable = false;
     
     # SSH Configuration
     sshHost = "blbu";
