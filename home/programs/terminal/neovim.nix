@@ -301,9 +301,6 @@
           vim.g["fsharp#automatic_workspace_init"] = 1
           vim.g["fsharp#automatic_reload_workspace"] = 1
 
-          -- Disable CodeLens (type sigs + reference counts rendered inline)
-          vim.g["fsharp#lsp_codelens"] = 0
-
           -- Linter and analyzers
           vim.g["fsharp#linter"] = 1
           vim.g["fsharp#unused_opens_analyzer"] = 1
@@ -521,9 +518,48 @@
       })
 
       -- ============================================================
-      -- Disable inlay hints (type annotations at end of line)
+      -- CodeLens: rewrite extmarks to render above-line instead of end-of-line
+      -- The monkey-patch approach doesn't work because neovim's codelens
+      -- module holds internal references. Instead, we post-process the
+      -- extmarks after they're created and convert virt_text -> virt_lines_above.
       -- ============================================================
-      vim.lsp.inlay_hint.enable(false)
+      local function rewrite_codelens_above()
+        local bufnr = vim.api.nvim_get_current_buf()
+        if not vim.api.nvim_buf_is_loaded(bufnr) then return end
+
+        for ns_name, ns_id in pairs(vim.api.nvim_get_namespaces()) do
+          if ns_name:find("codelens") then
+            local marks = vim.api.nvim_buf_get_extmarks(bufnr, ns_id, 0, -1, { details = true })
+            for _, mark in ipairs(marks) do
+              local id, row, col, details = mark[1], mark[2], mark[3], mark[4]
+              -- Only rewrite extmarks that use virt_text (end-of-line) and not already virt_lines
+              if details.virt_text and #details.virt_text > 0 and not (details.virt_lines and #details.virt_lines > 0) then
+                vim.api.nvim_buf_set_extmark(bufnr, ns_id, row, col, {
+                  id = id,
+                  virt_lines = { details.virt_text },
+                  virt_lines_above = true,
+                  hl_mode = "combine",
+                })
+              end
+            end
+          end
+        end
+      end
+
+      -- Run rewrite after codelens have time to resolve (delay lets LSP respond first)
+      local rewrite_timer = nil
+      local function schedule_codelens_rewrite()
+        if rewrite_timer then
+          rewrite_timer:stop()
+        end
+        rewrite_timer = vim.defer_fn(rewrite_codelens_above, 500)
+      end
+
+      vim.api.nvim_create_autocmd({ "CursorHold", "InsertLeave", "BufEnter", "LspAttach" }, {
+        group = vim.api.nvim_create_augroup("CodeLensAboveLine", { clear = true }),
+        pattern = "*.fs,*.fsi,*.fsx,*.cs",
+        callback = schedule_codelens_rewrite,
+      })
 
       -- ============================================================
       -- LSP Configuration (Neovim 0.11+ native API - no lspconfig)
