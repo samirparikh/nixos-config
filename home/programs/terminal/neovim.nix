@@ -8,33 +8,26 @@
     vimAlias = true;
     vimdiffAlias = true;
 
-    # Extra packages available to neovim (LSP servers, formatters, etc.)
     extraPackages = with pkgs; [
-      # C# / .NET
-      omnisharp-roslyn
-      netcoredbg
-      csharpier          # C# formatter
+      # .NET
+      omnisharp-roslyn    # C# LSP server
+      netcoredbg          # .NET debugger (C# + F#)
+      csharpier           # C# formatter
+      dotnet-sdk_8        # Required by FsAutoComplete
+      fsautocomplete      # F# LSP server (used by Ionide-vim)
 
-      # F# / .NET
-      dotnet-sdk_8       # Required by FsAutoComplete and F# tooling
-      fsautocomplete     # F# LSP server (used by Ionide-vim)
-
-      # General utilities
-      ripgrep            # for telescope
-      fd                 # for telescope
-      tree-sitter        # for treesitter
-      nodejs_22          # required for Copilot
+      # General
+      ripgrep             # Telescope dependency
+      fd                  # Telescope dependency
+      tree-sitter         # Treesitter dependency
+      nodejs_22           # Copilot dependency
     ];
 
     plugins = with pkgs.vimPlugins; [
-      # ============================================================
-      # Core plugins
-      # ============================================================
-      plenary-nvim       # Required by many plugins
+      # -- Core --
+      plenary-nvim
 
-      # ============================================================
-      # UI / Theme (Catppuccin to match your system)
-      # ============================================================
+      # -- Theme --
       {
         plugin = catppuccin-nvim;
         type = "lua";
@@ -62,7 +55,7 @@
         '';
       }
 
-      # Status line
+      # -- Status line --
       {
         plugin = lualine-nvim;
         type = "lua";
@@ -77,9 +70,7 @@
         '';
       }
 
-      # ============================================================
-      # File explorer
-      # ============================================================
+      # -- File explorer --
       nvim-web-devicons
       {
         plugin = nvim-tree-lua;
@@ -93,9 +84,7 @@
         '';
       }
 
-      # ============================================================
-      # Treesitter for syntax highlighting
-      # ============================================================
+      # -- Treesitter --
       {
         plugin = nvim-treesitter.withAllGrammars;
         type = "lua";
@@ -107,9 +96,7 @@
         '';
       }
 
-      # ============================================================
-      # Telescope (fuzzy finder)
-      # ============================================================
+      # -- Telescope --
       telescope-fzf-native-nvim
       {
         plugin = telescope-nvim;
@@ -139,10 +126,7 @@
         '';
       }
 
-      # ============================================================
-      # Autocompletion with nvim-cmp
-      # Note: No nvim-lspconfig needed - using native Neovim 0.11+ LSP API
-      # ============================================================
+      # -- Completion (nvim-cmp, no lspconfig — uses native Neovim 0.11+ LSP) --
       cmp-nvim-lsp
       cmp-buffer
       cmp-path
@@ -160,7 +144,6 @@
           local luasnip = require("luasnip")
           local lspkind = require("lspkind")
 
-          -- Load friendly-snippets
           require("luasnip.loaders.from_vscode").lazy_load()
 
           cmp.setup({
@@ -195,7 +178,7 @@
               end, { "i", "s" }),
             }),
             sources = cmp.config.sources({
-              { name = "copilot", group_index = 2 },  -- Copilot suggestions
+              { name = "copilot", group_index = 2 },
               { name = "nvim_lsp", group_index = 2 },
               { name = "luasnip", group_index = 2 },
               { name = "path", group_index = 2 },
@@ -216,17 +199,14 @@
             },
           })
 
-          -- Command line completion
           cmp.setup.cmdline(":", {
             mapping = cmp.mapping.preset.cmdline(),
-            sources = cmp.config.sources({
-              { name = "path" },
-            }, {
-              { name = "cmdline" },
-            }),
+            sources = cmp.config.sources(
+              { { name = "path" } },
+              { { name = "cmdline" } }
+            ),
           })
 
-          -- Search completion
           cmp.setup.cmdline("/", {
             mapping = cmp.mapping.preset.cmdline(),
             sources = { { name = "buffer" } },
@@ -234,9 +214,7 @@
         '';
       }
 
-      # ============================================================
-      # GitHub Copilot (AI completion - inline ghost text)
-      # ============================================================
+      # -- Copilot --
       {
         plugin = copilot-lua;
         type = "lua";
@@ -246,9 +224,9 @@
               enabled = true,
               auto_trigger = true,
               keymap = {
-                accept = "<Tab>",           -- Tab to accept
-                accept_word = "<M-k>",      -- Alt+k to accept word
-                accept_line = "<M-j>",      -- Alt+j to accept line
+                accept = "<Tab>",
+                accept_word = "<M-k>",
+                accept_line = "<M-j>",
                 next = "<M-]>",
                 prev = "<M-[>",
                 dismiss = "<C-]>",
@@ -257,60 +235,43 @@
             panel = {
               enabled = true,
               auto_refresh = true,
-              keymap = {
-                open = "<M-CR>",
-              },
+              keymap = { open = "<M-CR>" },
             },
             filetypes = {
               yaml = true,
               markdown = true,
-              cs = true,                   -- C#
-              fsharp = true,               -- F#
-              ["*"] = true,                -- Enable for all filetypes
+              cs = true,
+              fsharp = true,
+              ["*"] = true,
             },
           })
         '';
       }
-
-      # Copilot integration with nvim-cmp
       {
         plugin = copilot-cmp;
         type = "lua";
-        config = ''
-          require("copilot_cmp").setup()
-        '';
+        config = ''require("copilot_cmp").setup()'';
       }
 
-      # ============================================================
-      # F# support (Ionide-vim)
-      # ============================================================
+      # -- F# (Ionide-vim) --
+      # Registers FsAutoComplete with neovim's LSP client and starts it
+      # automatically for .fs/.fsi/.fsx files.
       {
         plugin = Ionide-vim;
         type = "lua";
         config = ''
-          -- Point Ionide to the Nix-provided FsAutoComplete binary
           vim.g["fsharp#fsautocomplete_command"] = { "${pkgs.fsautocomplete}/bin/fsautocomplete" }
-
-          -- Use neovim's built-in LSP client
           vim.g["fsharp#backend"] = "nvim"
-
-          -- Disable Ionide's default colorscheme (we use catppuccin)
           vim.g["fsharp#lsp_recommended_colorscheme"] = 0
-
-          -- Workspace settings
           vim.g["fsharp#automatic_workspace_init"] = 1
           vim.g["fsharp#automatic_reload_workspace"] = 1
-
-          -- Linter and analyzers
           vim.g["fsharp#linter"] = 1
           vim.g["fsharp#unused_opens_analyzer"] = 1
           vim.g["fsharp#unused_declarations_analyzer"] = 1
         '';
       }
 
-      # ============================================================
-      # Git integration
-      # ============================================================
+      # -- Git --
       {
         plugin = gitsigns-nvim;
         type = "lua";
@@ -337,34 +298,18 @@
         '';
       }
 
-      # ============================================================
-      # Quality of life plugins
-      # ============================================================
-      {
-        plugin = comment-nvim;
-        type = "lua";
-        config = ''require("Comment").setup()'';
-      }
-
+      # -- Quality of life --
+      { plugin = comment-nvim; type = "lua"; config = ''require("Comment").setup()''; }
       {
         plugin = nvim-autopairs;
         type = "lua";
         config = ''
           require("nvim-autopairs").setup({})
-          -- Integration with nvim-cmp
           local cmp_autopairs = require("nvim-autopairs.completion.cmp")
           require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
         '';
       }
-
-      {
-        plugin = which-key-nvim;
-        type = "lua";
-        config = ''
-          require("which-key").setup({})
-        '';
-      }
-
+      { plugin = which-key-nvim; type = "lua"; config = ''require("which-key").setup({})''; }
       {
         plugin = indent-blankline-nvim;
         type = "lua";
@@ -376,24 +321,24 @@
         '';
       }
 
-      # DAP (Debug Adapter Protocol) for debugging
+      # -- DAP (debugging) --
       nvim-dap
       nvim-dap-ui
-      nvim-nio  # Required by nvim-dap-ui
+      nvim-nio
       {
         plugin = nvim-dap;
         type = "lua";
         config = ''
           local dap = require("dap")
 
-          -- .NET Core debugging with netcoredbg (shared by C# and F#)
+          -- .NET debugger (shared by C# and F#)
           dap.adapters.coreclr = {
             type = "executable",
             command = "${pkgs.netcoredbg}/bin/netcoredbg",
             args = { "--interpreter=vscode" },
           }
 
-          dap.configurations.cs = {
+          local dotnet_config = {
             {
               type = "coreclr",
               name = "Launch - netcoredbg",
@@ -403,47 +348,33 @@
               end,
             },
           }
+          dap.configurations.cs = dotnet_config
+          dap.configurations.fsharp = dotnet_config
 
-          -- F# debugging (reuses the same coreclr/netcoredbg adapter)
-          dap.configurations.fsharp = {
-            {
-              type = "coreclr",
-              name = "Launch - netcoredbg",
-              request = "launch",
-              program = function()
-                return vim.fn.input("Path to dll: ", vim.fn.getcwd() .. "/bin/Debug/", "file")
-              end,
-            },
-          }
-
-          -- DAP keybindings
-          vim.keymap.set("n", "<F5>", function() dap.continue() end)
-          vim.keymap.set("n", "<F10>", function() dap.step_over() end)
-          vim.keymap.set("n", "<F11>", function() dap.step_into() end)
-          vim.keymap.set("n", "<F12>", function() dap.step_out() end)
-          vim.keymap.set("n", "<leader>b", function() dap.toggle_breakpoint() end)
-          vim.keymap.set("n", "<leader>B", function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end)
+          vim.keymap.set("n", "<F5>", dap.continue)
+          vim.keymap.set("n", "<F10>", dap.step_over)
+          vim.keymap.set("n", "<F11>", dap.step_into)
+          vim.keymap.set("n", "<F12>", dap.step_out)
+          vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint)
+          vim.keymap.set("n", "<leader>B", function()
+            dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+          end)
         '';
       }
-
       {
         plugin = nvim-dap-ui;
         type = "lua";
         config = ''
           local dap, dapui = require("dap"), require("dapui")
           dapui.setup()
-
-          -- Automatically open/close DAP UI
           dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
           dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
           dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
-
           vim.keymap.set("n", "<leader>du", function() dapui.toggle() end)
         '';
       }
     ];
 
-    # Extra Lua configuration (general settings)
     extraLuaConfig = ''
       -- ============================================================
       -- General settings
@@ -453,34 +384,28 @@
 
       local opt = vim.opt
 
-      -- Line numbers
       opt.number = true
       opt.relativenumber = true
 
-      -- Tabs & indentation
       opt.tabstop = 4
       opt.shiftwidth = 4
       opt.expandtab = true
       opt.autoindent = true
       opt.smartindent = true
 
-      -- Line wrapping
       opt.wrap = false
 
-      -- Search settings
       opt.ignorecase = true
       opt.smartcase = true
       opt.hlsearch = true
       opt.incsearch = true
 
-      -- Appearance
       opt.termguicolors = true
       opt.signcolumn = "yes"
       opt.cursorline = true
       opt.scrolloff = 8
       opt.sidescrolloff = 8
 
-      -- Behavior
       opt.splitright = true
       opt.splitbelow = true
       opt.mouse = "a"
@@ -491,14 +416,13 @@
       opt.swapfile = false
       opt.backup = false
 
-      -- Completion
       opt.completeopt = "menu,menuone,noselect"
 
       -- ============================================================
-      -- Diagnostics configuration (Neovim 0.11+ API)
+      -- Diagnostics (Neovim 0.11+)
       -- ============================================================
       vim.diagnostic.config({
-        virtual_text = false,
+        virtual_text = true,
         underline = true,
         update_in_insert = false,
         severity_sort = true,
@@ -506,7 +430,6 @@
           border = "rounded",
           source = true,
         },
-        -- Neovim 0.11+ diagnostic signs (replaces sign_define)
         signs = {
           text = {
             [vim.diagnostic.severity.ERROR] = " ",
@@ -518,59 +441,12 @@
       })
 
       -- ============================================================
-      -- CodeLens: rewrite extmarks to render above-line instead of end-of-line
-      -- The monkey-patch approach doesn't work because neovim's codelens
-      -- module holds internal references. Instead, we post-process the
-      -- extmarks after they're created and convert virt_text -> virt_lines_above.
+      -- LSP (Neovim 0.11+ native API)
       -- ============================================================
-      local function rewrite_codelens_above()
-        local bufnr = vim.api.nvim_get_current_buf()
-        if not vim.api.nvim_buf_is_loaded(bufnr) then return end
-
-        for ns_name, ns_id in pairs(vim.api.nvim_get_namespaces()) do
-          if ns_name:find("codelens") then
-            local marks = vim.api.nvim_buf_get_extmarks(bufnr, ns_id, 0, -1, { details = true })
-            for _, mark in ipairs(marks) do
-              local id, row, col, details = mark[1], mark[2], mark[3], mark[4]
-              -- Only rewrite extmarks that use virt_text (end-of-line) and not already virt_lines
-              if details.virt_text and #details.virt_text > 0 and not (details.virt_lines and #details.virt_lines > 0) then
-                vim.api.nvim_buf_set_extmark(bufnr, ns_id, row, col, {
-                  id = id,
-                  virt_lines = { details.virt_text },
-                  virt_lines_above = true,
-                  hl_mode = "combine",
-                })
-              end
-            end
-          end
-        end
-      end
-
-      -- Run rewrite after codelens have time to resolve (delay lets LSP respond first)
-      local rewrite_timer = nil
-      local function schedule_codelens_rewrite()
-        if rewrite_timer then
-          rewrite_timer:stop()
-        end
-        rewrite_timer = vim.defer_fn(rewrite_codelens_above, 500)
-      end
-
-      vim.api.nvim_create_autocmd({ "CursorHold", "InsertLeave", "BufEnter", "LspAttach" }, {
-        group = vim.api.nvim_create_augroup("CodeLensAboveLine", { clear = true }),
-        pattern = "*.fs,*.fsi,*.fsx,*.cs",
-        callback = schedule_codelens_rewrite,
-      })
-
-      -- ============================================================
-      -- LSP Configuration (Neovim 0.11+ native API - no lspconfig)
-      -- ============================================================
-
-      -- LSP keybindings (set up on LspAttach)
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
         callback = function(ev)
           local opts = { buffer = ev.buf, silent = true }
-
           vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
           vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
           vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
@@ -586,20 +462,17 @@
         end,
       })
 
-      -- Configure OmniSharp using Neovim 0.11+ native vim.lsp.config
-      -- Supports .sln, .slnx (new .NET 9 format), and .csproj files
+      -- OmniSharp (C#) — supports .sln, .slnx, and .csproj
       vim.lsp.config.omnisharp = {
         cmd = { "${pkgs.omnisharp-roslyn}/bin/OmniSharp", "--languageserver" },
         filetypes = { "cs", "vb" },
         root_dir = function(bufnr, on_dir)
-          local fname = vim.api.nvim_buf_get_name(bufnr)
-          -- Search for solution/project files in parent directories
           local root = vim.fs.root(bufnr, function(name)
             return name:match("%.sln$")
                 or name:match("%.slnx$")
                 or name:match("%.csproj$")
           end)
-          on_dir(root or vim.fs.dirname(fname))
+          on_dir(root or vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr)))
         end,
         settings = {
           FormattingOptions = {
@@ -612,48 +485,38 @@
           },
         },
       }
-
-      -- Enable OmniSharp
       vim.lsp.enable("omnisharp")
 
-      -- Note: FsAutoComplete (F# LSP) is managed by Ionide-vim automatically.
-      -- Ionide-vim registers itself with neovim's built-in LSP client
-      -- and starts FSAC when you open .fs, .fsi, or .fsx files.
+      -- FsAutoComplete (F#) is managed by Ionide-vim automatically.
 
       -- ============================================================
       -- Keybindings
       -- ============================================================
       local keymap = vim.keymap.set
 
-      -- Better window navigation
+      -- Window navigation
       keymap("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
       keymap("n", "<C-j>", "<C-w>j", { desc = "Move to lower window" })
       keymap("n", "<C-k>", "<C-w>k", { desc = "Move to upper window" })
       keymap("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 
-      -- Resize windows
+      -- Window resize
       keymap("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
       keymap("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease window height" })
       keymap("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
       keymap("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
 
-      -- Buffer navigation
+      -- Buffers
       keymap("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer" })
       keymap("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
       keymap("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete buffer" })
 
-      -- Clear search highlighting
+      -- Misc
       keymap("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
-
-      -- Better indenting in visual mode
       keymap("v", "<", "<gv", { desc = "Indent left" })
       keymap("v", ">", ">gv", { desc = "Indent right" })
-
-      -- Move lines up/down
       keymap("v", "J", ":m '>+1<cr>gv=gv", { desc = "Move line down" })
       keymap("v", "K", ":m '<-2<cr>gv=gv", { desc = "Move line up" })
-
-      -- Quick save
       keymap("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
       keymap("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
     '';
