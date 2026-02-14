@@ -15,6 +15,9 @@
       netcoredbg
       csharpier          # C# formatter
 
+      # F# / .NET
+      fsautocomplete     # F# LSP server (used by Ionide-vim)
+
       # General utilities
       ripgrep            # for telescope
       fd                 # for telescope
@@ -261,6 +264,7 @@
               yaml = true,
               markdown = true,
               cs = true,                   -- C#
+              fsharp = true,               -- F#
               ["*"] = true,                -- Enable for all filetypes
             },
           })
@@ -273,6 +277,33 @@
         type = "lua";
         config = ''
           require("copilot_cmp").setup()
+        '';
+      }
+
+      # ============================================================
+      # F# support (Ionide-vim)
+      # ============================================================
+      {
+        plugin = Ionide-vim;
+        type = "lua";
+        config = ''
+          -- Point Ionide to the Nix-provided FsAutoComplete binary
+          vim.g["fsharp#fsautocomplete_command"] = { "${pkgs.fsautocomplete}/bin/fsautocomplete" }
+
+          -- Use neovim's built-in LSP client
+          vim.g["fsharp#backend"] = "nvim"
+
+          -- Disable Ionide's default colorscheme (we use catppuccin)
+          vim.g["fsharp#lsp_recommended_colorscheme"] = 0
+
+          -- Workspace settings
+          vim.g["fsharp#automatic_workspace_init"] = 1
+          vim.g["fsharp#automatic_reload_workspace"] = 1
+
+          -- Linter and analyzers
+          vim.g["fsharp#linter"] = 1
+          vim.g["fsharp#unused_opens_analyzer"] = 1
+          vim.g["fsharp#unused_declarations_analyzer"] = 1
         '';
       }
 
@@ -354,7 +385,7 @@
         config = ''
           local dap = require("dap")
 
-          -- C# / .NET Core debugging with netcoredbg
+          -- .NET Core debugging with netcoredbg (shared by C# and F#)
           dap.adapters.coreclr = {
             type = "executable",
             command = "${pkgs.netcoredbg}/bin/netcoredbg",
@@ -362,6 +393,18 @@
           }
 
           dap.configurations.cs = {
+            {
+              type = "coreclr",
+              name = "Launch - netcoredbg",
+              request = "launch",
+              program = function()
+                return vim.fn.input("Path to dll: ", vim.fn.getcwd() .. "/bin/Debug/", "file")
+              end,
+            },
+          }
+
+          -- F# debugging (reuses the same coreclr/netcoredbg adapter)
+          dap.configurations.fsharp = {
             {
               type = "coreclr",
               name = "Launch - netcoredbg",
@@ -527,6 +570,10 @@
 
       -- Enable OmniSharp
       vim.lsp.enable("omnisharp")
+
+      -- Note: FsAutoComplete (F# LSP) is managed by Ionide-vim automatically.
+      -- Ionide-vim registers itself with neovim's built-in LSP client
+      -- and starts FSAC when you open .fs, .fsi, or .fsx files.
 
       -- ============================================================
       -- Keybindings
