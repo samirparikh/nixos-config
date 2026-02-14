@@ -16,6 +16,7 @@
       csharpier          # C# formatter
 
       # F# / .NET
+      dotnet-sdk_8       # Required by FsAutoComplete and F# tooling
       fsautocomplete     # F# LSP server (used by Ionide-vim)
 
       # General utilities
@@ -300,6 +301,9 @@
           vim.g["fsharp#automatic_workspace_init"] = 1
           vim.g["fsharp#automatic_reload_workspace"] = 1
 
+          -- Disable CodeLens (type sigs + reference counts rendered inline)
+          vim.g["fsharp#lsp_codelens"] = 0
+
           -- Linter and analyzers
           vim.g["fsharp#linter"] = 1
           vim.g["fsharp#unused_opens_analyzer"] = 1
@@ -497,7 +501,7 @@
       -- Diagnostics configuration (Neovim 0.11+ API)
       -- ============================================================
       vim.diagnostic.config({
-        virtual_text = true,
+        virtual_text = false,
         underline = true,
         update_in_insert = false,
         severity_sort = true,
@@ -515,6 +519,11 @@
           },
         },
       })
+
+      -- ============================================================
+      -- Disable inlay hints (type annotations at end of line)
+      -- ============================================================
+      vim.lsp.inlay_hint.enable(false)
 
       -- ============================================================
       -- LSP Configuration (Neovim 0.11+ native API - no lspconfig)
