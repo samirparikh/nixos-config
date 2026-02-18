@@ -11,7 +11,7 @@
     ./programs/terminal/fish.nix
     ./programs/terminal/git.nix
     ./programs/terminal/vim
-    ./programs/terminal/neovim.nix
+    ./programs/terminal/neovim
     ./programs/terminal/tmux
     ./programs/terminal/starship.nix
     ./programs/direnv.nix
