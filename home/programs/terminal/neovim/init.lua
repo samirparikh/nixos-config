@@ -51,6 +51,33 @@ require("lualine").setup({
   },
 })
 
+require("lensline").setup({
+  profiles = {
+    {
+      name = "default",
+      providers = {
+        {
+          name = "usages",
+          enabled = true,
+          include = { "refs" },
+          breakdown = false,
+          show_zero = true,
+        },
+      },
+      style = {
+        placement = "above",
+        prefix = "",
+        separator = " • ",
+        highlight = "Comment",
+        render = "all",
+        use_nerdfont = true,
+      },
+    },
+  },
+  debounce_ms = 300,
+  silence_lsp = true,
+})
+
 if vim.g.nix_fsautocomplete_bin then
   vim.g["fsharp#fsautocomplete_command"] = { vim.g.nix_fsautocomplete_bin }
 end
@@ -73,10 +100,29 @@ vim.diagnostic.config({
   },
 })
 
+local codelens_group = vim.api.nvim_create_augroup("UserCodeLens", { clear = true })
+
+local function buffer_supports_codelens(bufnr)
+  for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+    if client.supports_method("textDocument/codeLens") then
+      return true
+    end
+  end
+  return false
+end
+
+local function refresh_codelens(bufnr)
+  if buffer_supports_codelens(bufnr) then
+    vim.lsp.codelens.refresh({ bufnr = bufnr })
+  end
+end
+
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
   callback = function(ev)
-    local opts = { buffer = ev.buf, silent = true }
+    local bufnr = ev.buf
+    local opts = { buffer = bufnr, silent = true }
+
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
     vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
@@ -89,6 +135,22 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
     vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
     vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
+
+    vim.keymap.set("n", "<leader>cl", function()
+      vim.lsp.codelens.run()
+    end, vim.tbl_extend("force", opts, { desc = "Run CodeLens" }))
+
+    if buffer_supports_codelens(bufnr) then
+      vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+        group = codelens_group,
+        buffer = bufnr,
+        callback = function(args)
+          refresh_codelens(args.buf)
+        end,
+      })
+
+      refresh_codelens(bufnr)
+    end
   end,
 })
 

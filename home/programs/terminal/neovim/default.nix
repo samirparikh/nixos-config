@@ -23,6 +23,7 @@ in
       catppuccin-nvim
       Ionide-vim
       lualine-nvim
+      lensline-nvim
       (nvim-treesitter.withPlugins (parsers: [
         parsers.fsharp
         parsers.lua
