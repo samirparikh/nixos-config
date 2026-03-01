@@ -55,6 +55,7 @@
     jetbrains.rider
     dotnet-sdk_10
     netcoredbg
+    fantomas
   ];
 
   # Let Home Manager install and manage itself
