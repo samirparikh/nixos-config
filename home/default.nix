@@ -56,6 +56,7 @@
     dotnet-sdk_10
     netcoredbg
     fantomas
+    pandoc
   ];
 
   # Let Home Manager install and manage itself
