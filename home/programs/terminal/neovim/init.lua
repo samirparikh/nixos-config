@@ -16,6 +16,8 @@ opt.autoindent = true
 opt.smartindent = true
 
 opt.wrap = true
+opt.linebreak = true
+opt.breakindent = true -- Indents wrapped lines to match the original line
 
 opt.ignorecase = true
 opt.smartcase = true
