@@ -16,7 +16,7 @@
       difftool.prompt = false;
 
       alias = {
-        history = "log --all --oneline --decorate";
+        history = "log --graph --oneline --decorate --all";
       };
     };
   };
