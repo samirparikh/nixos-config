@@ -57,6 +57,7 @@
     netcoredbg
     fantomas
     pandoc
+    opencode
   ];
 
   # Let Home Manager install and manage itself
