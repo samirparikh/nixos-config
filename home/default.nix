@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, pkgs-unstable, ... }:
 
 {
   imports = [
@@ -25,24 +25,18 @@
   home.homeDirectory = "/home/samir";
 
   # Packages to install for this user
-  home.packages = with pkgs; [
+  home.packages = (with pkgs; [
     keepassxc
     kmymoney
-    darktable
     free42
     ffmpeg
     libreoffice
     vlc
-    chromium
-    microsoft-edge
     tree
-    freetube
     python3
     dig
-    claude-code
     sops
     age
-    mullvad-browser
     tor-browser
     pv
     sshfs
@@ -57,9 +51,14 @@
     netcoredbg
     fantomas
     pandoc
-    opencode
-    yt-dlp
-  ];
+  ]) ++ (with pkgs-unstable; [
+    opencode         # same
+    yt-dlp           # updates constantly (site breakage fixes)
+    freetube         # tracks YouTube API changes
+    darktable
+    chromium
+    microsoft-edge
+  ]);
 
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
