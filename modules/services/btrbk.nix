@@ -7,7 +7,7 @@
   #
   # Backs up btrfs subvolumes to remote server 'blbu' via SSH:
   #   - Daily: @home-Desktop, @home-Documents
-  #   - Weekly: @home-Music, @home-sites
+  #   - Weekly: @home-Music, @home-Pictures, @home-sites
   #
   # Prerequisites:
   #   1. Generate SSH key: sudo ssh-keygen -t ed25519 -f /root/.ssh/btrbk_ed25519 -N ""
@@ -71,7 +71,7 @@
     };
 
     # -------------------------------------------------------------------------
-    # Weekly backups: Music and sites
+    # Weekly backups: Pictures, Music and sites
     # -------------------------------------------------------------------------
     weekly = {
       onCalendar = "Mon *-*-* 13:00:00";
@@ -97,6 +97,11 @@
           subvolume."@home-Music" = {
             snapshot_name = "Music";
             target = "ssh://blbu/mnt/storage/snapshots/Music";
+          };
+
+          subvolume."@home-Pictures" = {
+            snapshot_name = "Pictures";
+            target = "ssh://blbu/mnt/storage/snapshots/Pictures";
           };
 
           subvolume."@home-sites" = {
