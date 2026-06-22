@@ -51,6 +51,7 @@
     netcoredbg
     fantomas
     pandoc
+    claude-code
   ]) ++ (with pkgs-unstable; [
     opencode         # same
     yt-dlp           # updates constantly (site breakage fixes)
