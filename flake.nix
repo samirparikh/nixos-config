@@ -14,11 +14,6 @@
     # Add NUR for Firefox extensions
     nur.url = "github:nix-community/NUR";
 
-    btrfs-backup = {
-      url = "github:samirparikh/btrfs-backup-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     speedup.url = "github:samirparikh/speedup";
 
     catppuccin = {
