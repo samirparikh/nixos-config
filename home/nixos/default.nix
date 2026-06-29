@@ -2,20 +2,20 @@
 
 {
   imports = [
-    ./programs/vscode.nix
-    ./programs/firefox.nix
+    ../programs/vscode.nix
+    ../programs/firefox.nix
     # be sure to also update hosts/nixos/default.nix to
     # include modules/system/virtualization.nix
-    # ./programs/virtmanager.nix
-    # ./programs/terminal/bash.nix
-    ./programs/terminal/fish.nix
-    ./programs/terminal/git.nix
-    ./programs/terminal/vim
-    ./programs/terminal/neovim
-    ./programs/terminal/tmux
-    ./programs/terminal/starship.nix
-    ./programs/direnv.nix
-    ./programs/terminal/zed
+    # ../programs/virtmanager.nix
+    # ../programs/terminal/bash.nix
+    ../programs/terminal/fish.nix
+    ../programs/terminal/git.nix
+    ../programs/terminal/vim
+    ../programs/terminal/neovim
+    ../programs/terminal/tmux
+    ../programs/terminal/starship.nix
+    ../programs/direnv.nix
+    ../programs/terminal/zed
 
     # Host-specific: catppuccin theme module
     inputs.catppuccin.homeModules.catppuccin

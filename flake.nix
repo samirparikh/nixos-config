@@ -45,37 +45,46 @@
       inherit system;
       config.allowUnfree = true;
     };
+    mkHost = { hostModule, homeModule }: nixpkgs.lib.nixosSystem {
+
+      # Pass all inputs to NixOS modules
+      specialArgs = { inherit inputs pkgs-unstable; };
+
+      modules = [
+        hostModule
+
+        ({ config, lib, ... }:
+        {
+          programs.command-not-found.enable = false;
+          programs.nix-index.enable = true;
+        })
+
+        # home-manager integration
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+
+          # Pass inputs to home-manager modules
+          home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
+
+          home-manager.users.samir = homeModule;
+
+          # Automatically backup existing files
+          home-manager.backupFileExtension = "backup";
+        }
+      ];
+    };
   in {
     nixosConfigurations = {
-      nixos = nixpkgs.lib.nixosSystem {
+      nixos = mkHost {
+        hostModule = ./hosts/nixos;
+        homeModule = ./home/nixos;
+      };
 
-        # Pass all inputs to NixOS modules
-        specialArgs = { inherit inputs pkgs-unstable; };
-
-        modules = [
-          ./hosts/nixos
-
-          ({ config, lib, ... }:
-          {
-            programs.command-not-found.enable = false;
-            programs.nix-index.enable = true;
-          })
-
-          # home-manager integration
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-
-            # Pass inputs to home-manager modules
-            home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
-
-            home-manager.users.samir = ./home;
-
-            # Automatically backup existing files
-            home-manager.backupFileExtension = "backup";
-          }
-        ];
+      t450s = mkHost {
+        hostModule = ./hosts/t450s;
+        homeModule = ./home/t450s;
       };
     };
   };
