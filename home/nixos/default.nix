@@ -46,10 +46,16 @@
     kdePackages.kclock
     weechat
     exercism
-    jetbrains.rider
-    dotnet-sdk_10
-    netcoredbg
-    fantomas
+    # Temporarily disabled: nixos-unstable bumped these to require
+    # dotnet-vmr-10.0.301 (and 10.0.9 transitively), which has no
+    # binary cache and takes hours to build from source. Re-enable
+    # once the multi-host refactor is verified, or once
+    # cache.nixos.org publishes the artifacts.
+    # See also: home/programs/terminal/neovim/default.nix and CLAUDE.md.
+    # jetbrains.rider     # pulls dotnet-sdk-wrapped-10.0.301
+    # dotnet-sdk_10
+    # netcoredbg
+    # fantomas
     pandoc
     claude-code
   ]) ++ (with pkgs-unstable; [
