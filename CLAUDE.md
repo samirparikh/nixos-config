@@ -84,3 +84,40 @@ nix-store --realise --dry-run $(nix eval --raw .#nixosConfigurations.nixos.confi
 ```
 
 If the output says "will be built", a source build is still required. If it says "will be fetched", the cache has it.
+
+## Open items / next session TODOs
+
+Two open workstreams to pick up in a future session. Kept here (rather than in a separate TODO file) so `CLAUDE.md`'s always-loaded context surfaces them at the start of every session.
+
+### 1. Restore .NET tooling on both hosts
+
+Blocked on `dotnet-vmr-10.0.301` (and 8.0.x, transitively) having no binary cache on the current nixpkgs pin. See the "Temporary: .NET tooling disabled" section above for the full list of packages to un-stub and the exact substitutability check to run.
+
+Sequence when unblocking:
+1. Run the `nix-store --realise --dry-run` check above on the current flake pin. If any dotnet-vmr line shows `will be built`, stop — a source build is still required and we're not ready.
+2. If everything is `will be fetched`, restore the neovim `nixPaths` interpolations back to `${pkgs.omnisharp-roslyn}/bin/OmniSharp` etc., and uncomment the corresponding `extraPackages` entries in `home/programs/terminal/neovim/default.nix`.
+3. In `home/nixos/default.nix`, uncomment `jetbrains.rider`, `dotnet-sdk_10`, `netcoredbg`, `fantomas`.
+4. On t450s, the shared neovim module change alone re-enables .NET LSPs there; if you also want the Rider/SDK stack on the laptop, add those packages explicitly to `home/t450s/default.nix` (they were never in the laptop config).
+5. Rebuild both hosts.
+
+The 26.05 upgrade below may be what unblocks this — the 26.05 stable cache is likely to have prebuilt dotnet-vmr artifacts that unstable currently lacks.
+
+### 2. Upgrade both hosts to NixOS 26.05
+
+Flake is currently pinned to `nixos-25.11` and `home-manager/release-25.11`. Target 26.05 for both.
+
+Changes required:
+- `flake.nix`: bump `nixpkgs.url` to `github:nixos/nixpkgs/nixos-26.05` and `home-manager.url` to `github:nix-community/home-manager/release-26.05`.
+- **Do NOT touch `system.stateVersion` on either host.** The value is a first-install pin, not a running-version indicator; upgrading nixpkgs doesn't change it. Same rule for `home.stateVersion`. Both are correct as-is.
+- Run `nix flake update` to refresh dependent inputs against the new nixpkgs.
+- Verify inputs still work with 26.05: `catppuccin` (rev-pinned, should be fine), `sops-nix`, `nur`, `speedup`.
+
+Verification approach:
+1. Build on the desktop first (bigger blast radius): `nix build .#nixosConfigurations.nixos.config.system.build.toplevel` — pure build, no activation. If it succeeds, run the substitutability check to be sure nothing surprising will source-build.
+2. If clean, `sudo nixos-rebuild boot --flake .#nixos` and reboot.
+3. Then t450s: same sequence, `.#t450s`.
+
+Watch for:
+- Modules that changed defaults between 25.11 and 26.05. `stateVersion` gates in module code should preserve old semantics for stateful services, but new modules may add options.
+- Any input that lags 26.05 support. Home-manager's `release-26.05` branch always exists but may lag a few days on release day; nixos-26.05 came out May 2026 so this shouldn't matter.
+- .NET binary cache status — if fetched, this upgrade doubles as unblocking item 1 above.
