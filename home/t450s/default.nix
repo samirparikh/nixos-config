@@ -33,6 +33,7 @@
     microsoft-edge
     yt-dlp
     darktable
+    opencode
   ]);
 
   programs.home-manager.enable = true;
