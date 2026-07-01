@@ -37,5 +37,14 @@
 
   environment.variables.EDITOR = "vim";
 
+  # Nerd Fonts — needed for starship / nvim / tmux icons to render.
+  # Konsole must be configured to use one of these as its primary font
+  # (Settings → Edit Current Profile → Appearance → Font).
+  fonts.packages = with pkgs.nerd-fonts; [
+    fira-code
+    meslo-lg
+    symbols-only
+  ];
+
   system.stateVersion = "26.05";
 }
