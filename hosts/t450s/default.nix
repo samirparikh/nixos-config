@@ -24,7 +24,7 @@
     ../../modules/desktop/nix-ld.nix
 
     # sops-nix
-    inputs.sops-nix.nixosModules.sops
+    # inputs.sops-nix.nixosModules.sops
   ];
 
   # Hostname
