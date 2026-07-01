@@ -15,7 +15,9 @@
     # ../../modules/system/virtualization.nix
     ../../modules/services/services.nix
     # ../../modules/services/btrbk.nix
-    ../../modules/services/dns.nix
+    # DNS module pins resolvers to LAN AdGuard + Mullvad-only rules and
+    # requires the search_domain sops secret — not portable to a laptop.
+    # ../../modules/services/dns.nix
     # ../../modules/services/uptime-kuma.nix
     ../../modules/hardware/audio.nix
     ../../modules/hardware/graphics.nix
