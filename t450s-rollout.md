@@ -90,8 +90,8 @@ generation (see "Rollback" section below) and diagnose the delta.
     actually run dynamically linked binaries outside nixpkgs
   - [x] `NUR` overlay + Firefox with declarative extensions (ublock-origin,
         web-archives, vimium, sponsorblock)
-  - `speedup` package
-  - Nerd Fonts (large closure — think before bulk-adding)
+  - [x] `speedup` package (from personal flake input)
+  - [ ] Rest of the Nerd Fonts (expand beyond the three added above)
 
 - [ ] **Step 6 — Merge to `main`**
   - Once the laptop matches the desired steady state, open a PR from

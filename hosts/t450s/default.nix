@@ -39,6 +39,7 @@
     curl
     libimobiledevice
     ifuse
+    inputs.speedup.packages.${pkgs.stdenv.hostPlatform.system}.speedup
   ];
 
   environment.variables.EDITOR = "vim";
