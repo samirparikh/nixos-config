@@ -18,11 +18,14 @@
   home.username = "samir";
   home.homeDirectory = "/home/samir";
 
-  home.packages = with pkgs; [
+  home.packages = (with pkgs; [
     tree
     htop
     claude-code
-  ];
+  ]) ++ (with pkgs-unstable; [
+    chromium
+    microsoft-edge
+  ]);
 
   programs.home-manager.enable = true;
 
