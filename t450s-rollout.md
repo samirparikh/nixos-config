@@ -49,7 +49,7 @@ generation (see "Rollback" section below) and diagnose the delta.
     - `curl https://<vaultwarden-url>` succeeds (or `openssl s_client`
       shows the cert as trusted)
 
-- [x] **Step 3 — services.nix (tailscale, mullvad, usbmuxd)**
+- [x] **Step 3 — services.nix (tailscale, mullvad, usbmuxd)** (commit `ed76444`) — verified on laptop
   - Edit `hosts/t450s/default.nix` imports, add:
     ```nix
     ../../modules/services/services.nix
@@ -59,7 +59,7 @@ generation (see "Rollback" section below) and diagnose the delta.
     - `mullvad status` responds (installer runs on first login)
     - Plug in iPhone → `ifuse` mounts (uses usbmuxd)
 
-- [ ] **Step 4 — Extended home dev environment**
+- [x] **Step 4 — Extended home dev environment**
   - Edit `home/t450s/default.nix` imports, add:
     ```nix
     ../programs/terminal/neovim
