@@ -26,6 +26,8 @@
     free42
     vlc
     ffmpeg
+    pv
+    sshfs
   ]) ++ (with pkgs-unstable; [
     chromium
     microsoft-edge
