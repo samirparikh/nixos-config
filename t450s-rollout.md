@@ -88,7 +88,8 @@ generation (see "Rollback" section below) and diagnose the delta.
   - [x] `libimobiledevice`, `ifuse` in `environment.systemPackages`
   - [ ] `nix-ld` module (`modules/desktop/nix-ld.nix`) — only if you
     actually run dynamically linked binaries outside nixpkgs
-  - [ ] `NUR` overlay — only if you install Firefox extensions declaratively
+  - [x] `NUR` overlay + Firefox with declarative extensions (ublock-origin,
+        web-archives, vimium, sponsorblock)
   - `speedup` package
   - Nerd Fonts (large closure — think before bulk-adding)
 

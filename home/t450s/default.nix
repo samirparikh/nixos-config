@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ../programs/firefox.nix
     ../programs/terminal/fish.nix
     ../programs/terminal/git.nix
     ../programs/terminal/vim

@@ -29,6 +29,10 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  # NUR overlay — required so home-manager's firefox.nix can pull
+  # extensions from pkgs.nur.repos.rycee.firefox-addons.
+  nixpkgs.overlays = [ inputs.nur.overlays.default ];
+
   environment.systemPackages = with pkgs; [
     vim
     git
