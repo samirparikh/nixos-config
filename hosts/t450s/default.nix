@@ -7,6 +7,7 @@
     ../../modules/system/security.nix
     ../../modules/system/users.nix
     ../../modules/system/locale.nix
+    ../../modules/services/services.nix
     ../../modules/hardware/audio.nix
     ../../modules/hardware/graphics.nix
     ../../modules/hardware/bluetooth.nix

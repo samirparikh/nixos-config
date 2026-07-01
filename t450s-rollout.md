@@ -35,7 +35,7 @@ generation (see "Rollback" section below) and diagnose the delta.
     is running though, so audio should work once `alsa-utils` or a
     browser is installed).
 
-- [x] **Step 2 — security.nix**
+- [x] **Step 2 — security.nix** (commit `d4571bd`) — verified on laptop
   - Edit `hosts/t450s/default.nix` imports, add:
     ```nix
     ../../modules/system/security.nix
@@ -49,7 +49,7 @@ generation (see "Rollback" section below) and diagnose the delta.
     - `curl https://<vaultwarden-url>` succeeds (or `openssl s_client`
       shows the cert as trusted)
 
-- [ ] **Step 3 — services.nix (tailscale, mullvad, usbmuxd)**
+- [x] **Step 3 — services.nix (tailscale, mullvad, usbmuxd)**
   - Edit `hosts/t450s/default.nix` imports, add:
     ```nix
     ../../modules/services/services.nix
