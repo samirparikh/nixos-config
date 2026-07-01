@@ -8,6 +8,7 @@
     ../../modules/system/users.nix
     ../../modules/system/locale.nix
     ../../modules/services/services.nix
+    ../../modules/services/dns-resolved.nix
     ../../modules/hardware/audio.nix
     ../../modules/hardware/graphics.nix
     ../../modules/hardware/bluetooth.nix
