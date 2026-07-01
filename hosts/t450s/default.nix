@@ -6,6 +6,10 @@
     ../../modules/system/networking.nix
     ../../modules/system/users.nix
     ../../modules/system/locale.nix
+    ../../modules/hardware/audio.nix
+    ../../modules/hardware/graphics.nix
+    ../../modules/hardware/bluetooth.nix
+    ../../modules/desktop/kde.nix
   ];
 
   networking.hostName = "t450s";
