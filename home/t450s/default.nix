@@ -24,9 +24,13 @@
     claude-code
     libreoffice
     free42
+    vlc
+    ffmpeg
   ]) ++ (with pkgs-unstable; [
     chromium
     microsoft-edge
+    yt-dlp
+    darktable
   ]);
 
   programs.home-manager.enable = true;
