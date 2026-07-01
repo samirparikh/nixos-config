@@ -21,8 +21,6 @@
   home.packages = (with pkgs; [
     tree
     htop
-    sops
-    age
     claude-code
   ]);
 
