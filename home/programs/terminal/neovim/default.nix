@@ -3,10 +3,18 @@
 let
   # Nix store paths injected as vim globals so init.lua stays portable.
   # On non-NixOS systems, set these globals another way or rely on $PATH.
+  #
+  # Temporarily stubbed to empty strings: the original references
+  # (${pkgs.omnisharp-roslyn}, ${pkgs.netcoredbg}, ${pkgs.fsautocomplete})
+  # pull dotnet-vmr-10.0.301 into the closure, which has no binary cache
+  # on nixos-unstable and takes hours to build from source. Restore the
+  # original interpolations once the multi-host refactor is verified, or
+  # once cache.nixos.org publishes the artifacts. See also:
+  # home/nixos/default.nix.
   nixPaths = ''
-    vim.g.nix_omnisharp_bin   = "${pkgs.omnisharp-roslyn}/bin/OmniSharp"
-    vim.g.nix_netcoredbg_bin  = "${pkgs.netcoredbg}/bin/netcoredbg"
-    vim.g.nix_fsautocomplete_bin = "${pkgs.fsautocomplete}/bin/fsautocomplete"
+    vim.g.nix_omnisharp_bin   = ""
+    vim.g.nix_netcoredbg_bin  = ""
+    vim.g.nix_fsautocomplete_bin = ""
   '';
 in
 {
@@ -18,12 +26,12 @@ in
     vimdiffAlias = true;
 
     extraPackages = with pkgs; [
-      # .NET
-      omnisharp-roslyn
-      netcoredbg
-      csharpier
-      dotnet-sdk_8
-      fsautocomplete
+      # .NET (temporarily disabled — see nixPaths comment above)
+      # omnisharp-roslyn
+      # netcoredbg
+      # csharpier
+      # dotnet-sdk_8
+      # fsautocomplete
 
       # General
       ripgrep
