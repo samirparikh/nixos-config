@@ -4,7 +4,10 @@
   imports = [
     ./hardware-configuration.nix
     # ./filesystems-home.nix
-    ../../modules/system/boot.nix
+    # boot.nix is UEFI/systemd-boot (matches the desktop). This host
+    # was installed in legacy BIOS mode by Calamares, so GRUB is
+    # configured inline below.
+    # ../../modules/system/boot.nix
     ../../modules/system/networking.nix
     ../../modules/system/security.nix
     ../../modules/system/users.nix
@@ -28,6 +31,15 @@
     # sops-nix
     # inputs.sops-nix.nixosModules.sops
   ];
+
+  # Boot loader — legacy BIOS + GRUB in the MBR of /dev/sda.
+  # /boot is a vfat partition (Calamares default); GRUB stage 1.5
+  # lives in the BIOS boot partition at /dev/sda1.
+  boot.loader.grub = {
+    enable = true;
+    device = "/dev/sda";
+  };
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Hostname
   networking.hostName = "t450s";
