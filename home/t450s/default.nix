@@ -22,6 +22,8 @@
     tree
     htop
     claude-code
+    libreoffice
+    free42
   ]) ++ (with pkgs-unstable; [
     chromium
     microsoft-edge
