@@ -81,7 +81,7 @@ generation (see "Rollback" section below) and diagnose the delta.
     - `direnv` hook fires when entering a `.envrc` dir
     - Catppuccin theme applied in fish/nvim/starship
 
-- [~] **Step 5 — Optional extras (cleanup pass)** — in progress
+- [x] **Step 5 — Optional extras (cleanup pass)** — done except `nix-ld` (deferred until needed)
   - [x] Nerd Fonts (`fira-code`, `meslo-lg`, `symbols-only`) — commit `5172ae7`
         (fixed missing starship glyphs; Konsole profile pointed at
         FiraCode Nerd Font manually)
@@ -91,7 +91,7 @@ generation (see "Rollback" section below) and diagnose the delta.
   - [x] `NUR` overlay + Firefox with declarative extensions (ublock-origin,
         web-archives, vimium, sponsorblock)
   - [x] `speedup` package (from personal flake input)
-  - [ ] Rest of the Nerd Fonts (expand beyond the three added above)
+  - [x] Rest of the Nerd Fonts (expanded to match the desktop's 24-font set)
 
 - [ ] **Step 6 — Merge to `main`**
   - Once the laptop matches the desired steady state, open a PR from

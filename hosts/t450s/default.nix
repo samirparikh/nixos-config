@@ -47,10 +47,32 @@
   # Nerd Fonts — needed for starship / nvim / tmux icons to render.
   # Konsole must be configured to use one of these as its primary font
   # (Settings → Edit Current Profile → Appearance → Font).
+  # https://search.nixos.org/packages?channel=25.11&sort=alpha_asc&query=nerd-fonts
   fonts.packages = with pkgs.nerd-fonts; [
+    adwaita-mono
+    agave
+    blex-mono
+    caskaydia-cove
+    caskaydia-mono
+    droid-sans-mono
     fira-code
+    fira-mono
+    geist-mono
+    go-mono
+    inconsolata
+    inconsolata-go
+    inconsolata-lgc
+    intone-mono
+    lilex
     meslo-lg
+    monaspace
+    mononoki
+    noto
+    overpass
+    recursive-mono
+    roboto-mono
     symbols-only
+    tinos
   ];
 
   system.stateVersion = "26.05";
