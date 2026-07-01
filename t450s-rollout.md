@@ -85,8 +85,7 @@ generation (see "Rollback" section below) and diagnose the delta.
   - [x] Nerd Fonts (`fira-code`, `meslo-lg`, `symbols-only`) — commit `5172ae7`
         (fixed missing starship glyphs; Konsole profile pointed at
         FiraCode Nerd Font manually)
-  - [ ] `libimobiledevice`, `ifuse` in `environment.systemPackages`
-    (needed if step 3 iPhone mount depended on host tools)
+  - [x] `libimobiledevice`, `ifuse` in `environment.systemPackages`
   - [ ] `nix-ld` module (`modules/desktop/nix-ld.nix`) — only if you
     actually run dynamically linked binaries outside nixpkgs
   - [ ] `NUR` overlay — only if you install Firefox extensions declaratively

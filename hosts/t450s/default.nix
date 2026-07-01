@@ -33,6 +33,8 @@
     vim
     git
     curl
+    libimobiledevice
+    ifuse
   ];
 
   environment.variables.EDITOR = "vim";
