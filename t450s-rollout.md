@@ -29,14 +29,13 @@ generation (see "Rollback" section below) and diagnose the delta.
 
 - [x] **Step 1 — KDE + audio + graphics + bluetooth** (commit `df2f52d`)
   - Added imports: `audio.nix`, `graphics.nix`, `bluetooth.nix`, `kde.nix`.
-  - Verify:
-    - SDDM login screen appears after `nixos-rebuild switch`
-    - Log in as `samir` → Plasma 6 desktop
-    - Sound plays from `speaker-test -c 2` or a browser video
-    - `bluetoothctl list` shows the controller
-    - Wifi/ethernet still work
+  - Verified on laptop: SDDM appears after reboot, Plasma 6 desktop
+    up, `bluetoothctl` sees the controller. Audio CLI test skipped
+    (`speaker-test` and browser both unavailable in this MVP — pipewire
+    is running though, so audio should work once `alsa-utils` or a
+    browser is installed).
 
-- [ ] **Step 2 — security.nix**
+- [x] **Step 2 — security.nix**
   - Edit `hosts/t450s/default.nix` imports, add:
     ```nix
     ../../modules/system/security.nix
