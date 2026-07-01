@@ -59,7 +59,7 @@ generation (see "Rollback" section below) and diagnose the delta.
     - `mullvad status` responds (installer runs on first login)
     - Plug in iPhone → `ifuse` mounts (uses usbmuxd)
 
-- [x] **Step 4 — Extended home dev environment**
+- [x] **Step 4 — Extended home dev environment** (commit `c84c6ac`) — verified on laptop (starship/nvim/tmux/direnv/catppuccin all working; icons required a Nerd Font, handled in step 5)
   - Edit `home/t450s/default.nix` imports, add:
     ```nix
     ../programs/terminal/neovim
@@ -81,12 +81,15 @@ generation (see "Rollback" section below) and diagnose the delta.
     - `direnv` hook fires when entering a `.envrc` dir
     - Catppuccin theme applied in fish/nvim/starship
 
-- [ ] **Step 5 — Optional extras (cleanup pass)**
-  - `libimobiledevice`, `ifuse` in `environment.systemPackages`
+- [~] **Step 5 — Optional extras (cleanup pass)** — in progress
+  - [x] Nerd Fonts (`fira-code`, `meslo-lg`, `symbols-only`) — commit `5172ae7`
+        (fixed missing starship glyphs; Konsole profile pointed at
+        FiraCode Nerd Font manually)
+  - [ ] `libimobiledevice`, `ifuse` in `environment.systemPackages`
     (needed if step 3 iPhone mount depended on host tools)
-  - `nix-ld` module (`modules/desktop/nix-ld.nix`) — only if you
+  - [ ] `nix-ld` module (`modules/desktop/nix-ld.nix`) — only if you
     actually run dynamically linked binaries outside nixpkgs
-  - `NUR` overlay — only if you install Firefox extensions declaratively
+  - [ ] `NUR` overlay — only if you install Firefox extensions declaratively
   - `speedup` package
   - Nerd Fonts (large closure — think before bulk-adding)
 
