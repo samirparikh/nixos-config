@@ -28,6 +28,7 @@
     ffmpeg
     pv
     sshfs
+    tor-browser
   ]) ++ (with pkgs-unstable; [
     chromium
     microsoft-edge
