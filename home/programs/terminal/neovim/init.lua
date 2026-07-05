@@ -305,6 +305,8 @@ vim.diagnostic.config({
 -- ============================================================
 -- LSP (Neovim 0.11+ native API)
 -- ============================================================
+
+-- --- LspAttach: buffer-local keymaps for every LSP client ---
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("UserLspConfig", { clear = true }),
   callback = function(ev)
@@ -324,8 +326,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- OmniSharp (C#) — supports .sln, .slnx, and .csproj
--- Path comes from vim global set by Nix (see default.nix).
+-- --- OmniSharp (C#) ---
+-- Supports .sln, .slnx, and .csproj.
+-- Path comes from a vim global set by Nix (see default.nix).
 -- On non-NixOS systems, set vim.g.nix_omnisharp_bin or use $PATH.
 local omnisharp_bin = vim.g.nix_omnisharp_bin or "OmniSharp"
 vim.lsp.config.omnisharp = {
@@ -352,7 +355,7 @@ vim.lsp.config.omnisharp = {
 }
 vim.lsp.enable("omnisharp")
 
--- clangd (C/C++)
+-- --- clangd (C/C++) ---
 vim.lsp.config.clangd = {
   cmd = { "clangd", "--background-index", "--clang-tidy" },
   filetypes = { "c", "cpp", "objc", "objcpp" },
@@ -360,12 +363,14 @@ vim.lsp.config.clangd = {
 }
 vim.lsp.enable("clangd")
 
--- FsAutoComplete (F#) is managed by Ionide-vim automatically.
+-- --- FsAutoComplete (F#) ---
+-- Managed by Ionide-vim automatically; see the F# section above.
 
--- Signature popup (auto-shows on '(' and ',').
--- To switch back to manual-only (press <C-k> to see the signature):
---   1. Comment out or delete the require("lsp_signature").setup({...}) call below.
---   2. Remove `lsp_signature-nvim` from `plugins` in default.nix (optional).
+-- --- Signature popup (lsp_signature) ---
+-- Auto-shows the signature on '(' and ','. To revert to manual-only
+-- (press <C-k> to see the signature):
+--   1. Delete the require("lsp_signature").setup({...}) call below.
+--   2. Optionally remove `lsp_signature-nvim` from plugins in default.nix.
 -- The <C-k> mapping in the LspAttach block above calls
 -- vim.lsp.buf.signature_help directly and works without this plugin.
 require("lsp_signature").setup({
@@ -380,8 +385,8 @@ require("lsp_signature").setup({
 -- ============================================================
 local dap = require("dap")
 
--- .NET debugger (shared by C# and F#)
--- Path comes from vim global set by Nix (see default.nix).
+-- --- .NET debugger (netcoredbg, shared by C# and F#) ---
+-- Path comes from a vim global set by Nix (see default.nix).
 -- On non-NixOS systems, set vim.g.nix_netcoredbg_bin or use $PATH.
 local netcoredbg_bin = vim.g.nix_netcoredbg_bin or "netcoredbg"
 dap.adapters.coreclr = {
@@ -412,7 +417,7 @@ vim.keymap.set("n", "<leader>B", function()
   dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 end)
 
--- DAP UI
+-- --- DAP UI (dapui) ---
 local dapui = require("dapui")
 dapui.setup()
 dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
@@ -425,24 +430,24 @@ vim.keymap.set("n", "<leader>du", function() dapui.toggle() end)
 -- ============================================================
 local keymap = vim.keymap.set
 
--- Window navigation
+-- --- Window navigation ---
 keymap("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
 keymap("n", "<C-j>", "<C-w>j", { desc = "Move to lower window" })
 keymap("n", "<C-k>", "<C-w>k", { desc = "Move to upper window" })
 keymap("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
 
--- Window resize
+-- --- Window resize ---
 keymap("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
 keymap("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease window height" })
 keymap("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease window width" })
 keymap("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
 
--- Buffers
+-- --- Buffers ---
 keymap("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer" })
 keymap("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
 keymap("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete buffer" })
 
--- Misc
+-- --- Misc ---
 keymap("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
 keymap("v", "<", "<gv", { desc = "Indent left" })
 keymap("v", ">", ">gv", { desc = "Indent right" })
