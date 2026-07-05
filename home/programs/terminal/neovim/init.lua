@@ -352,7 +352,28 @@ vim.lsp.config.omnisharp = {
 }
 vim.lsp.enable("omnisharp")
 
+-- clangd (C/C++)
+vim.lsp.config.clangd = {
+  cmd = { "clangd", "--background-index", "--clang-tidy" },
+  filetypes = { "c", "cpp", "objc", "objcpp" },
+  root_markers = { "compile_commands.json", ".clangd", ".git" },
+}
+vim.lsp.enable("clangd")
+
 -- FsAutoComplete (F#) is managed by Ionide-vim automatically.
+
+-- Signature popup (auto-shows on '(' and ',').
+-- To switch back to manual-only (press <C-k> to see the signature):
+--   1. Comment out or delete the require("lsp_signature").setup({...}) call below.
+--   2. Remove `lsp_signature-nvim` from `plugins` in default.nix (optional).
+-- The <C-k> mapping in the LspAttach block above calls
+-- vim.lsp.buf.signature_help directly and works without this plugin.
+require("lsp_signature").setup({
+  bind = true,
+  floating_window = true,
+  hint_enable = false,
+  handler_opts = { border = "rounded" },
+})
 
 -- ============================================================
 -- DAP (debugging)

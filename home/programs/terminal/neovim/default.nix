@@ -38,6 +38,9 @@ in
       fd
       tree-sitter
       nodejs_22
+
+      # C/C++
+      clang-tools
     ];
 
     plugins = with pkgs.vimPlugins; [
@@ -78,6 +81,9 @@ in
 
       # F# (Ionide-vim)
       Ionide-vim
+
+      # LSP signature popup
+      lsp_signature-nvim
 
       # Git
       gitsigns-nvim
