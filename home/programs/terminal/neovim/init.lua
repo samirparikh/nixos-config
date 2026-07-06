@@ -315,7 +315,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
     vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+    vim.keymap.set({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help, opts)
     vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
     vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
@@ -365,20 +365,6 @@ vim.lsp.enable("clangd")
 
 -- --- FsAutoComplete (F#) ---
 -- Managed by Ionide-vim automatically; see the F# section above.
-
--- --- Signature popup (lsp_signature) ---
--- Auto-shows the signature on '(' and ','. To revert to manual-only
--- (press <C-k> to see the signature):
---   1. Delete the require("lsp_signature").setup({...}) call below.
---   2. Optionally remove `lsp_signature-nvim` from plugins in default.nix.
--- The <C-k> mapping in the LspAttach block above calls
--- vim.lsp.buf.signature_help directly and works without this plugin.
-require("lsp_signature").setup({
-  bind = true,
-  floating_window = true,
-  hint_enable = false,
-  handler_opts = { border = "rounded" },
-})
 
 -- ============================================================
 -- DAP (debugging)

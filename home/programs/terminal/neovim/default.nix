@@ -82,9 +82,6 @@ in
       # F# (Ionide-vim)
       Ionide-vim
 
-      # LSP signature popup
-      lsp_signature-nvim
-
       # Git
       gitsigns-nvim
 
