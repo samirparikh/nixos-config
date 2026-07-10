@@ -225,6 +225,9 @@ require("copilot").setup({
 })
 require("copilot_cmp").setup()
 
+-- Start disabled; toggle at runtime with :Copilot enable / :Copilot disable
+require("copilot.command").disable()
+
 -- ============================================================
 -- F# (Ionide-vim)
 -- ============================================================
