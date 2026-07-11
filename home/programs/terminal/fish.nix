@@ -11,7 +11,7 @@
       cses = "cd /home/samir/Documents/programming/clang/cses2/ || exit";
     };
     shellAbbrs = {
-      gcc = "gcc -std=c99 -O2 -Wall -Wextra -Wpedantic";
+      gcc = "gcc -std=c99 -O2 -Wall -Wextra -Werror -Wpedantic";
     };
   };
 }
