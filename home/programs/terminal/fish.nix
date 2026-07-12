@@ -12,6 +12,7 @@
     };
     shellAbbrs = {
       gcc = "gcc -std=c99 -O2 -Wall -Wextra -Werror -Wpedantic";
+      clang = "clang -std=c99 -O2 -Wall -Wextra -Werror -Wpedantic";
     };
   };
 }
