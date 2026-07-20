@@ -29,6 +29,7 @@
     pv
     sshfs
     tor-browser
+    exercism
   ]) ++ (with pkgs-unstable; [
     chromium
     microsoft-edge
