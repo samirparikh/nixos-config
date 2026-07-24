@@ -50,6 +50,9 @@
         
         # Required to enable userChrome.css
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+
+        # Enable VPN
+        "browser.ipProtection.enabled" = true;
       };
       
       # Add userChrome.css
