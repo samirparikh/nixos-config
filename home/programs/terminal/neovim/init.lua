@@ -438,6 +438,10 @@ keymap("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete buffer" })
 
 -- --- Misc ---
 keymap("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
+
+-- Make F1 act like Escape
+keymap({ "n", "i", "v", "x", "s", "o", "t" }, "<F1>", "<Esc>", { silent = true, remap = true, desc = "F1 acts as Escape" })
+
 keymap("v", "<", "<gv", { desc = "Indent left" })
 keymap("v", ">", ">gv", { desc = "Indent right" })
 keymap("v", "J", ":m '>+1<cr>gv=gv", { desc = "Move line down" })
