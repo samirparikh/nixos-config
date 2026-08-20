@@ -61,7 +61,6 @@
   ]) ++ (with pkgs-unstable; [
     opencode         # same
     yt-dlp           # updates constantly (site breakage fixes)
-    freetube         # tracks YouTube API changes
     darktable
     chromium
     microsoft-edge
